@@ -28,7 +28,6 @@ export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
 
   return (
     <Col
-      className={'drag-drop-zone'}
       onDrop={e => {
         handleDrop(e, taskStatus);
       }}
