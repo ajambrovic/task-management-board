@@ -9,7 +9,7 @@ const initialState: TasksReduxModel = {
   byId: {
     '1': {
       id: '1',
-      name: 'A',
+      name: 'First task',
       status: TaskStatus.ToDo,
       description: 'ToDo',
       dueByTimestamp: 1702011443720,
@@ -18,7 +18,7 @@ const initialState: TasksReduxModel = {
     },
     '2': {
       id: '2',
-      name: 'B',
+      name: 'Second task',
       status: TaskStatus.InProgress,
       description: 'InProgress',
       dueByTimestamp: 1702011443720,
@@ -27,7 +27,7 @@ const initialState: TasksReduxModel = {
     },
     '3': {
       id: '3',
-      name: 'C',
+      name: 'Third task',
       status: TaskStatus.Completed,
       description: 'Completed',
       dueByTimestamp: 1701511443720,
