@@ -1,14 +1,15 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Counter from './components/Counter/Counter';
-import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { counterActions } from './redux/counter/slice';
+import {useAppDispatch, useAppSelector} from './redux/hooks';
+import {counterActions} from './redux/counter/slice';
+import {Tasks} from 'components/Tasks/TasksList';
+import {TaskStatus} from 'domain/tasks/tasksModel';
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const { value } = useAppSelector((state) => state.counter);
+  const {value} = useAppSelector(state => state.counter);
 
   const increment = (): void => {
     dispatch(counterActions.increment());
@@ -40,15 +41,15 @@ function App(): JSX.Element {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
           Learn React
         </a>
       </header>
+      <div>
+        <Tasks taskStatus={TaskStatus.ToDo}></Tasks>
+        <Tasks taskStatus={TaskStatus.InProgress}></Tasks>
+        <Tasks taskStatus={TaskStatus.Completed}></Tasks>
+      </div>
     </div>
   );
 }
