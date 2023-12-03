@@ -90,6 +90,10 @@ function AddNewTask() {
                 <Form.Label>Assigned team member name</Form.Label>
                 <Form.Control type="text" placeholder="Enter assigned team member name" required />
               </Form.Group>
+              <Form.Group className="mb-3" controlId="dueDate">
+                <Form.Label>Due date</Form.Label>
+                <Form.Control type="date" required />
+              </Form.Group>
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -112,9 +116,11 @@ function generateTask(form: HTMLFormElement): TaskModel {
   const description = (form.elements[2] as HTMLTextAreaElement).value;
   const priorityString = (form.elements[3] as HTMLSelectElement).value;
   const assignedTeamMember = (form.elements[4] as HTMLInputElement).value;
+  const dueDateString = (form.elements[5] as HTMLInputElement).value;
 
-  const status: TaskStatus = TaskStatus[statusString as keyof typeof TaskStatus];
-  const priority: TaskPriority = TaskPriority[priorityString as keyof typeof TaskPriority];
+  const status: TaskStatus = parseInt(statusString, 10) as TaskStatus;
+  const priority: TaskPriority = parseInt(priorityString, 10) as TaskPriority;
+  const dueByTimestamp = new Date(dueDateString).getTime();
 
   return {
     name,
@@ -122,7 +128,7 @@ function generateTask(form: HTMLFormElement): TaskModel {
     description,
     priority,
     assignedTeamMember,
-    dueByTimestamp: new Date().getTime(),
+    dueByTimestamp,
     id: new Date().getTime().toString(),
   };
 }
