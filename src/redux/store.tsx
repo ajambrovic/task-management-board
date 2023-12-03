@@ -1,9 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const configureAppStore = (initialState = {}) => {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
@@ -12,7 +11,7 @@ const configureAppStore = (initialState = {}) => {
 
   const store = configureStore({
     reducer: rootReducer,
-    middleware: (gDM) => gDM().concat([...middleware]),
+    middleware: gDM => gDM().concat([...middleware]),
     preloadedState: initialState,
     devTools: process.env.NODE_ENV !== 'production',
   });
