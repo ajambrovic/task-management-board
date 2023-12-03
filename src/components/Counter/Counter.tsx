@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface ICounterProps {
+type CounterProps = {
   value?: number;
   onIncrement?: () => void;
   onDecrement?: () => void;
   onIncrementAsync?: () => void;
   onDecrementAsync?: () => void;
-}
-const Counter: React.FC<ICounterProps> = ({
+};
+const Counter: React.FC<CounterProps> = ({
   value,
   onIncrement,
   onDecrement,
