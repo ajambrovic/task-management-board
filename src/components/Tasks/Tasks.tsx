@@ -1,47 +1,36 @@
 import {type TaskStatus} from 'domain/tasks/tasksModel';
 import {selectTasksByTaskStatus} from 'domain/tasks/tasksSelector';
-import {useAppSelector} from 'redux/hooks';
+import {useAppDispatch, useAppSelector} from 'redux/hooks';
 import {Task} from './Task';
+import {tasksActions} from 'domain/tasks/tasksSlice';
 
 export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
   const tasks = useAppSelector(state => selectTasksByTaskStatus(state, taskStatus));
+  const dispatch = useAppDispatch();
 
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log(e);
-  };
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log(e);
-  };
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(e);
   };
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, taskStatus: TaskStatus) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(e);
+    dispatch(
+      tasksActions.changeTaskStatus({
+        id: e.dataTransfer.getData('text'),
+        taskStatus,
+      }),
+    );
   };
 
   return (
     <div
       className={'drag-drop-zone'}
       onDrop={e => {
-        handleDrop(e);
+        handleDrop(e, taskStatus);
       }}
-      onDragOver={e => {
-        handleDragOver(e);
-      }}
-      onDragEnter={e => {
-        handleDragEnter(e);
-      }}
-      onDragLeave={e => {
-        handleDragLeave(e);
-      }}>
+      onDragOver={handleDragOver}>
       <h2>{taskStatus}</h2>
       <ol>
         {tasks.map(task => (

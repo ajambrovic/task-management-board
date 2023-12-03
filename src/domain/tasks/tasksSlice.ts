@@ -1,6 +1,6 @@
 import {NetworkRequestStatus} from 'domain/networkRequest/networkRequestModel';
-import {TaskPriority, TaskStatus, type TasksReduxModel} from './tasksModel';
-import {createSlice} from '@reduxjs/toolkit';
+import {type TaskModel, TaskPriority, TaskStatus, type TasksReduxModel} from './tasksModel';
+import {type PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 const initialState: TasksReduxModel = {
   networkRequestStatus: NetworkRequestStatus.Success,
@@ -40,7 +40,11 @@ const initialState: TasksReduxModel = {
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {},
+  reducers: {
+    changeTaskStatus: (state, action: PayloadAction<{taskStatus: TaskStatus; id: TaskModel['id']}>) => {
+      state.byId[action.payload.id].status = action.payload.taskStatus;
+    },
+  },
 });
 
 export const {actions: tasksActions, reducer: tasksReducer} = tasksSlice;

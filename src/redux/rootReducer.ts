@@ -1,4 +1,4 @@
-import {tasksReducer} from 'domain/tasks/tasksReducers';
+import {tasksReducer} from 'domain/tasks/tasksSlice';
 import {counterReducer} from './counter/slice';
 
 const rootReducer = {
