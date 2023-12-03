@@ -44,6 +44,10 @@ export const tasksSlice = createSlice({
     changeTaskStatus: (state, action: PayloadAction<{taskStatus: TaskStatus; id: TaskModel['id']}>) => {
       state.byId[action.payload.id].status = action.payload.taskStatus;
     },
+    createTask: (state, action: PayloadAction<TaskModel>) => {
+      state.byId[action.payload.id] = action.payload;
+      state.ids.push(action.payload.id);
+    },
   },
 });
 
