@@ -3,7 +3,7 @@ import './App.css';
 import Counter from './components/Counter/Counter';
 import {useAppDispatch, useAppSelector} from './redux/hooks';
 import {counterActions} from './redux/counter/slice';
-import {Tasks} from 'components/Tasks/TasksList';
+import {Tasks} from 'components/Tasks/Tasks';
 import {TaskStatus} from 'domain/tasks/tasksModel';
 
 function App(): JSX.Element {

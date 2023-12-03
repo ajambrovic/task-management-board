@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.drag-drop-zone {
+  padding: 2rem;
+  text-align: center;
+  background: #07f;
+  border-radius: 0.5rem;
+  box-shadow: 5px 5px 10px #c0c0c0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
