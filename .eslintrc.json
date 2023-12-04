@@ -42,6 +42,9 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/array-type": [
       "off"
+    ],
+    "@typescript-eslint/no-dynamic-delete": [
+      "off"
     ]
   }
 }
