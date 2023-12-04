@@ -58,6 +58,9 @@ export const tasksSlice = createSlice({
         delete state.byId[action.payload];
       }
     },
+    editTask: (state, action: PayloadAction<TaskModel>) => {
+      state.byId[action.payload.id] = action.payload;
+    },
   },
 });
 
