@@ -29,7 +29,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
     }
     setValidated(true);
     if ((form as HTMLFormElement).checkValidity()) {
-      dispatch(tasksActions.createTask(generateTask(form as HTMLFormElement)));
+      dispatch(tasksActions.editTask(generateTask(form as HTMLFormElement, taskId)));
       handleClose();
     }
   };
@@ -40,7 +40,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" onClick={handleShow} className="ms-auto">
         Edit task
       </Button>
       <Modal show={show} onHide={handleClose}>
@@ -108,7 +108,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
   );
 };
 
-function generateTask(form: HTMLFormElement): TaskModel {
+function generateTask(form: HTMLFormElement, id: TaskModel['id']): TaskModel {
   const name = (form.elements[0] as HTMLInputElement).value;
   const statusString = (form.elements[1] as HTMLSelectElement).value;
   const description = (form.elements[2] as HTMLTextAreaElement).value;
@@ -127,6 +127,6 @@ function generateTask(form: HTMLFormElement): TaskModel {
     priority,
     assignedTeamMember,
     dueByTimestamp,
-    id: new Date().getTime().toString(),
+    id,
   };
 }
