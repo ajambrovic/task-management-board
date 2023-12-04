@@ -7,7 +7,7 @@ export const Task = ({taskId}: {taskId: TaskModel['id']}) => {
   const task = useAppSelector(state => selectTaskById(state, taskId));
 
   return (
-    <ListGroup.Item draggable="true" onDragStart={handleDragStart}>
+    <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId}>
       {task.name}
     </ListGroup.Item>
   );
