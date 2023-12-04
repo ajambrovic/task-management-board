@@ -26,7 +26,7 @@ export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
   };
 
   return (
-    <Col onDrop={handleDrop} onDragOver={handleDragOver}>
+    <Col onDrop={handleDrop} onDragOver={handleDragOver} md className="p-3">
       <h2>{TaskStatus[taskStatus]}</h2>
       {tasks.map(task => (
         <Task taskId={task.id} key={task.id} />
