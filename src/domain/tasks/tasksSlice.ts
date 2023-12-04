@@ -1,6 +1,6 @@
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 import {NetworkRequestStatus} from 'domain/networkRequest/networkRequestModel';
-import {type TaskModel, TaskPriority, TaskStatus, type TasksReduxModel} from './tasksModel';
-import {type PayloadAction, createSlice} from '@reduxjs/toolkit';
+import {TaskPriority, TaskStatus, type TaskModel, type TasksReduxModel} from './tasksModel';
 
 const byIdDummyData = {
   '1': {

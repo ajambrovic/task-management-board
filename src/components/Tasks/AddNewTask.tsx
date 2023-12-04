@@ -1,12 +1,12 @@
-import {type TaskModel, TaskPriority, TaskStatus} from 'domain/tasks/tasksModel';
+import {TaskPriority, TaskStatus, type TaskModel} from 'domain/tasks/tasksModel';
+import {tasksActions} from 'domain/tasks/tasksSlice';
 import {useState} from 'react';
-import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
 import {useAppDispatch} from 'redux/hooks';
-import {tasksActions} from 'domain/tasks/tasksSlice';
 
 export const AddNewTask = () => {
   const dispatch = useAppDispatch();

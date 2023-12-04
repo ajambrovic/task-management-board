@@ -1,11 +1,12 @@
-import {type TaskModel, TaskPriority, TaskStatus} from 'domain/tasks/tasksModel';
+import {TaskPriority, TaskStatus, type TaskModel} from 'domain/tasks/tasksModel';
+import {selectTaskById} from 'domain/tasks/tasksSelector';
+import {tasksActions} from 'domain/tasks/tasksSlice';
 import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import {useAppDispatch, useAppSelector} from 'redux/hooks';
-import {tasksActions} from 'domain/tasks/tasksSlice';
-import {selectTaskById} from 'domain/tasks/tasksSelector';
+import {convertTimestampToDate} from 'util/timeFormat';
 
 export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
   const task = useAppSelector(state => selectTaskById(state, taskId));
@@ -84,11 +85,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="dueDate">
               <Form.Label>Due date</Form.Label>
-              <Form.Control
-                type="date"
-                required
-                defaultValue={new Date(task.dueByTimestamp).toISOString().split('T')[0]}
-              />
+              <Form.Control type="date" required defaultValue={convertTimestampToDate(task.dueByTimestamp)} />
             </Form.Group>
           </Form>
         </Modal.Body>
