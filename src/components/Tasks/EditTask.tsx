@@ -84,7 +84,11 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="dueDate">
               <Form.Label>Due date</Form.Label>
-              <Form.Control type="date" required defaultValue={new Date(task.dueByTimestamp).toString()} />
+              <Form.Control
+                type="date"
+                required
+                defaultValue={new Date(task.dueByTimestamp).toISOString().split('T')[0]}
+              />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -92,7 +96,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
           <Button variant="danger" onClick={handleDelete}>
             Delete Task
           </Button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} className="ms-auto">
             Close
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
