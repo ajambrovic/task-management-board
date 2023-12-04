@@ -1,10 +1,9 @@
-import {type TaskStatus} from 'domain/tasks/tasksModel';
+import {TaskStatus} from 'domain/tasks/tasksModel';
 import {selectTasksByTaskStatus} from 'domain/tasks/tasksSelector';
+import {tasksActions} from 'domain/tasks/tasksSlice';
+import Col from 'react-bootstrap/Col';
 import {useAppDispatch, useAppSelector} from 'redux/hooks';
 import {Task} from './Task';
-import {tasksActions} from 'domain/tasks/tasksSlice';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Col from 'react-bootstrap/Col';
 
 export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
   const tasks = useAppSelector(state => selectTasksByTaskStatus(state, taskStatus));
@@ -15,7 +14,7 @@ export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
     e.stopPropagation();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLElement>, taskStatus: TaskStatus) => {
+  const handleDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     dispatch(
@@ -27,17 +26,11 @@ export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
   };
 
   return (
-    <Col
-      onDrop={e => {
-        handleDrop(e, taskStatus);
-      }}
-      onDragOver={handleDragOver}>
-      <h2>{taskStatus}</h2>
-      <ListGroup>
-        {tasks.map(task => (
-          <Task taskId={task.id} key={task.id} />
-        ))}
-      </ListGroup>
+    <Col onDrop={handleDrop} onDragOver={handleDragOver}>
+      <h2>{TaskStatus[taskStatus]}</h2>
+      {tasks.map(task => (
+        <Task taskId={task.id} key={task.id} />
+      ))}
     </Col>
   );
 };

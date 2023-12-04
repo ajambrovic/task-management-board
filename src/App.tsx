@@ -1,8 +1,8 @@
+import {AddNewTask} from 'components/Tasks/AddNewTask';
 import {Tasks} from 'components/Tasks/Tasks';
 import {TaskStatus} from 'domain/tasks/tasksModel';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import {AddNewTask} from 'components/Tasks/AddNewTask';
 
 function App(): JSX.Element {
   return (

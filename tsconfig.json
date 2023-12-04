@@ -19,7 +19,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "types": [
+      "react",
+      "jest",
+      "redux-persist"
+    ],
   },
   "include": [
     "src"
