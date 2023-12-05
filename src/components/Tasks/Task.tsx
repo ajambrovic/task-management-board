@@ -10,7 +10,7 @@ export const Task = ({taskId}: {taskId: TaskModel['id']}) => {
   const task = useAppSelector(state => selectTaskById(state, taskId));
   return (
     <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId}>
-      <Card body>
+      <Card.Body className="sortable-item rounded bg-white shadow-2 mb-2">
         <Card.Title>{task.name}</Card.Title>
         <Card.Subtitle>Assigned to: {task.assignedTeamMember}</Card.Subtitle>
         <Card.Text>
@@ -19,7 +19,7 @@ export const Task = ({taskId}: {taskId: TaskModel['id']}) => {
           Task Priority: {TaskPriority[task.priority]}
         </Card.Text>
         <EditTask taskId={taskId} />
-      </Card>
+      </Card.Body>
     </ListGroup.Item>
   );
 };

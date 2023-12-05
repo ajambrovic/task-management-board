@@ -1,13 +1,72 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.card {
+  background-color: #ebecf0;
+}
+.card-header {
+  background-color: hsla(0, 0%, 100%, 0);
+  border-bottom: hsla(0, 0%, 100%, 0);
+}
+
+.shadow-2 {
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.rounded {
+  border-radius: 0.25rem !important;
+}
+
+.sortable-item {
+  cursor: grab;
+  transition: background-color 0.2s ease-in !important;
+}
+.sortable-item:hover {
+  background-color: rgba(0, 0, 0, 0.01) !important;
+}
+/*
+.bg-image {
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  background-image: url(bgimage.jpeg);
+  height: 100vh;
+}*/
+.bg-image {
+  background: url(bgimage.jpeg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100vh;
+}
+
+@media (max-width: 575px) {
+  .bg-image {
+    background-image: url(bgimage-mobile.jpg);
+  }
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 1199px) {
+  .bg-image {
+    background-image: url(bgimage-tablet.jpg);
+  }
 }
