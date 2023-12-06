@@ -1,6 +1,7 @@
 import {TaskStatus} from 'domain/tasks/tasksModel';
 import {selectTasksByTaskStatus} from 'domain/tasks/tasksSelector';
 import {tasksActions} from 'domain/tasks/tasksSlice';
+import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import {useAppDispatch, useAppSelector} from 'redux/hooks';
 import {Task} from './Task';
@@ -26,11 +27,15 @@ export const Tasks = ({taskStatus}: {taskStatus: TaskStatus}) => {
   };
 
   return (
-    <Col onDrop={handleDrop} onDragOver={handleDragOver}>
-      <h2>{TaskStatus[taskStatus]}</h2>
-      {tasks.map(task => (
-        <Task taskId={task.id} key={task.id} />
-      ))}
+    <Col md>
+      <Card onDrop={handleDrop} onDragOver={handleDragOver} className="card shadow-1-strong m-3 p-2 pb-0">
+        <Card.Header>
+          <strong>{TaskStatus[taskStatus]}</strong>
+        </Card.Header>
+        {tasks.map(task => (
+          <Task taskId={task.id} key={task.id} />
+        ))}
+      </Card>
     </Col>
   );
 };

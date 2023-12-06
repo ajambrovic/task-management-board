@@ -3,8 +3,10 @@ import {selectTaskById} from 'domain/tasks/tasksSelector';
 import {tasksActions} from 'domain/tasks/tasksSlice';
 import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
 import {useAppDispatch, useAppSelector} from 'redux/hooks';
 import {convertTimestampToDate} from 'util/timeFormat';
 
@@ -50,42 +52,66 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit} id={'newTaskFrom'}>
-            <Form.Group className="mb-3" controlId="taskName">
-              <Form.Label>Task name</Form.Label>
-              <Form.Control type="text" placeholder="Enter task name" required defaultValue={task.name} />
+            <Form.Group className="mb-3" controlId="taskName" as={Row}>
+              <Form.Label column sm={4}>
+                Task name
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Control type="text" placeholder="Enter task name" required defaultValue={task.name} />
+              </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="taskStatus">
-              <Form.Label>Task status</Form.Label>
-              <Form.Select aria-label="Select task status" className="mb-3" defaultValue={task.status}>
-                <option value={TaskStatus.ToDo}>To do</option>
-                <option value={TaskStatus.InProgress}>In progress</option>
-                <option value={TaskStatus.Completed}>Completed</option>
-              </Form.Select>
+            <Form.Group className="mb-3" controlId="taskStatus" as={Row}>
+              <Form.Label column sm={4}>
+                Task status
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Select aria-label="Select task status" className="mb-3" defaultValue={task.status}>
+                  <option value={TaskStatus.ToDo}>To do</option>
+                  <option value={TaskStatus.InProgress}>In progress</option>
+                  <option value={TaskStatus.Completed}>Completed</option>
+                </Form.Select>
+              </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="taskDescription">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows={3} required defaultValue={task.description} />
+            <Form.Group className="mb-3" controlId="taskDescription" as={Row}>
+              <Form.Label column sm={4}>
+                Description
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Control as="textarea" rows={3} required defaultValue={task.description} />
+              </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="taskPriority">
-              <Form.Label>Task priority</Form.Label>
-              <Form.Select aria-label="Select task priority" defaultValue={task.priority}>
-                <option value={TaskPriority.Medium}>Medium</option>
-                <option value={TaskPriority.High}>High</option>
-                <option value={TaskPriority.Low}>Low</option>
-              </Form.Select>
+            <Form.Group className="mb-3" controlId="taskPriority" as={Row}>
+              <Form.Label column sm={4}>
+                Task priority
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Select aria-label="Select task priority" defaultValue={task.priority}>
+                  <option value={TaskPriority.Medium}>Medium</option>
+                  <option value={TaskPriority.High}>High</option>
+                  <option value={TaskPriority.Low}>Low</option>
+                </Form.Select>
+              </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="teamMember">
-              <Form.Label>Assigned team member name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter assigned team member name"
-                required
-                defaultValue={task.assignedTeamMember}
-              />
+            <Form.Group className="mb-3" controlId="teamMember" as={Row}>
+              <Form.Label column sm={4}>
+                Assigned team member name
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter assigned team member name"
+                  required
+                  defaultValue={task.assignedTeamMember}
+                />
+              </Col>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="dueDate">
-              <Form.Label>Due date</Form.Label>
-              <Form.Control type="date" required defaultValue={convertTimestampToDate(task.dueByTimestamp)} />
+            <Form.Group className="mb-3" controlId="dueDate" as={Row}>
+              <Form.Label column sm={4}>
+                Due date
+              </Form.Label>
+              <Col sm={8}>
+                <Form.Control type="date" required defaultValue={convertTimestampToDate(task.dueByTimestamp)} />
+              </Col>
             </Form.Group>
           </Form>
         </Modal.Body>

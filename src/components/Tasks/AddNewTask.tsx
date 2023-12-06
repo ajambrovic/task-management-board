@@ -46,37 +46,61 @@ export const AddNewTask = () => {
           </Modal.Header>
           <Modal.Body>
             <Form noValidate validated={validated} onSubmit={handleSubmit} id={'newTaskFrom'}>
-              <Form.Group className="mb-3" controlId="taskName">
-                <Form.Label>Task name</Form.Label>
-                <Form.Control type="text" placeholder="Enter task name" required />
+              <Form.Group className="mb-3" controlId="taskName" as={Row}>
+                <Form.Label column sm={4}>
+                  Task name
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control type="text" placeholder="Enter task name" required />
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="taskStatus">
-                <Form.Label>Task status</Form.Label>
-                <Form.Select aria-label="Select task status" className="mb-3">
-                  <option value={TaskStatus.ToDo}>To do</option>
-                  <option value={TaskStatus.InProgress}>In progress</option>
-                  <option value={TaskStatus.Completed}>Completed</option>
-                </Form.Select>
+              <Form.Group className="mb-3" controlId="taskStatus" as={Row}>
+                <Form.Label column sm={4}>
+                  Task status
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Select aria-label="Select task status" className="mb-3">
+                    <option value={TaskStatus.ToDo}>To do</option>
+                    <option value={TaskStatus.InProgress}>In progress</option>
+                    <option value={TaskStatus.Completed}>Completed</option>
+                  </Form.Select>
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="taskDescription">
-                <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={3} required />
+              <Form.Group className="mb-3" controlId="taskDescription" as={Row}>
+                <Form.Label column sm={4}>
+                  Description
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control as="textarea" rows={3} required />
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="taskPriority">
-                <Form.Label>Task priority</Form.Label>
-                <Form.Select aria-label="Select task priority">
-                  <option value={TaskPriority.Medium}>Medium</option>
-                  <option value={TaskPriority.High}>High</option>
-                  <option value={TaskPriority.Low}>Low</option>
-                </Form.Select>
+              <Form.Group className="mb-3" controlId="taskPriority" as={Row}>
+                <Form.Label column sm={4}>
+                  Task priority
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Select aria-label="Select task priority">
+                    <option value={TaskPriority.Medium}>Medium</option>
+                    <option value={TaskPriority.High}>High</option>
+                    <option value={TaskPriority.Low}>Low</option>
+                  </Form.Select>
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="teamMember">
-                <Form.Label>Assigned team member name</Form.Label>
-                <Form.Control type="text" placeholder="Enter assigned team member name" required />
+              <Form.Group className="mb-3" controlId="teamMember" as={Row}>
+                <Form.Label column sm={4}>
+                  Assigned team member
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control type="text" placeholder="Enter assigned team member name" required />
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3" controlId="dueDate">
-                <Form.Label>Due date</Form.Label>
-                <Form.Control type="date" required />
+              <Form.Group className="mb-3" controlId="dueDate" as={Row}>
+                <Form.Label column sm={4}>
+                  Due date
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control type="date" required />
+                </Col>
               </Form.Group>
             </Form>
           </Modal.Body>
