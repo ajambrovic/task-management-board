@@ -1,10 +1,9 @@
-import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
-import {NetworkRequestStatus} from 'domain/networkRequest/networkRequestModel';
-import {type TaskModel, type TasksReduxModel, type TaskStatus} from './tasksModel';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { NetworkRequestStatus } from 'domain/networkRequest/networkRequestModel';
+import { type TaskModel, type TasksConvertedServerModel, type TasksReduxModel, type TaskStatus } from './tasksModel';
 
 const initialState: TasksReduxModel = {
   networkRequestStatus: NetworkRequestStatus.Success,
-  initialLoad: true,
   ids: [],
   byId: {},
 };
@@ -13,7 +12,10 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    changeTaskStatus: (state, action: PayloadAction<{taskStatus: TaskStatus; id: TaskModel['id']}>) => {
+    loadTasks: (state) => {
+      return { ...state, networkRequestStatus: NetworkRequestStatus.InProgress };
+    },
+    changeTaskStatus: (state, action: PayloadAction<{ taskStatus: TaskStatus; id: TaskModel['id'] }>) => {
       state.byId[action.payload.id].status = action.payload.taskStatus;
     },
     createTask: (state, action: PayloadAction<TaskModel>) => {
@@ -21,7 +23,7 @@ export const tasksSlice = createSlice({
       state.ids.push(action.payload.id);
     },
     deleteTask: (state, action: PayloadAction<TaskModel['id']>) => {
-      const index = state.ids.findIndex(id => id === action.payload);
+      const index = state.ids.findIndex((id) => id === action.payload);
       const elementFound = index !== -1;
       if (elementFound) {
         state.ids.splice(index, 1);
@@ -31,7 +33,21 @@ export const tasksSlice = createSlice({
     editTask: (state, action: PayloadAction<TaskModel>) => {
       state.byId[action.payload.id] = action.payload;
     },
+    tasksLoadSuccess: (state, action: PayloadAction<TasksConvertedServerModel>) => {
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          ...action.payload.byId,
+        },
+        ids: [...state.ids, ...action.payload.ids],
+        networkRequestStatus: NetworkRequestStatus.Success,
+      };
+    },
+    tasksLoadFailed: (state) => {
+      return { ...state, networkRequestStatus: NetworkRequestStatus.Fail };
+    },
   },
 });
 
-export const {actions: tasksActions, reducer: tasksReducer} = tasksSlice;
+export const { actions: tasksActions, reducer: tasksReducer } = tasksSlice;
