@@ -6,6 +6,7 @@ const initialState: TasksReduxModel = {
   networkRequestStatus: NetworkRequestStatus.Success,
   ids: [],
   byId: {},
+  error: '',
 };
 
 export const tasksSlice = createSlice({
@@ -21,10 +22,14 @@ export const tasksSlice = createSlice({
         },
         ids: [...state.ids, ...action.payload.ids],
         networkRequestStatus: NetworkRequestStatus.Success,
+        error: '',
       };
     },
-    tasksLoadFailed: (state) => {
-      return { ...state, networkRequestStatus: NetworkRequestStatus.Fail };
+    rehydrationFinished: (state) => {
+      return { ...state, networkRequestStatus: NetworkRequestStatus.Success };
+    },
+    tasksActionFailed: (state, action: PayloadAction<string>) => {
+      return { ...state, networkRequestStatus: NetworkRequestStatus.Fail, error: action.payload };
     },
     loadTasks: (state) => {
       return { ...state, networkRequestStatus: NetworkRequestStatus.InProgress };

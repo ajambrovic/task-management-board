@@ -39,4 +39,3 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 1. Additional tests weren't implented since Puppeteer has issues working on M1 Mac and that+Jest was what I was going for
 2. A lot of accessibility is provied out of the box with Bootstrap; I also ran Lighthouse Accessibility check (after saving the page as HTML) and got 100
-3. I implemented a simple error display on server errors via ReactTostify, but there's an issue when the page is refreshed so I turned the display off.

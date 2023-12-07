@@ -22,6 +22,10 @@ export const selectTasksByTaskStatus = createSelector(
   },
 );
 
+export const selectTaskLoadingError = (state: RootState) => {
+  return selectTasks(state).error;
+};
+
 export const selectTaskById = (state: RootState, taskId: TaskModel['id']) => {
   return selectTasksData(state)[taskId];
 };

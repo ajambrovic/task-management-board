@@ -37,6 +37,8 @@ export function* loadInitialData() {
     const taskIds = yield* select(selectTasksIds);
     if (taskIds.length === 0) {
       yield* put(tasksActions.loadTasks());
+    } else {
+      yield* put(tasksActions.rehydrationFinished());
     }
   });
 }
@@ -53,9 +55,11 @@ function* doFetchTasksSaga({
     if (response.status === 200) {
       const tasksData: TasksServerModel = yield response.json();
       yield* put(tasksActions.tasksLoadSuccess(convertTasksServerDataToLocalData(tasksData)));
+    } else {
+      yield* put(tasksActions.tasksActionFailed('Saving to server failed'));
     }
   } catch (error) {
-    yield* put(tasksActions.tasksLoadFailed);
+    yield* put(tasksActions.tasksActionFailed('Saving to server failed'));
   }
 }
 
@@ -76,9 +80,11 @@ function* doEditTaskSaga({ payload }: { type: PayloadAction['type']; payload: Ta
     });
     if (response.status !== 200) {
       yield* put(tasksActions.editTaskLocally(currentTaskData));
+      yield* put(tasksActions.tasksActionFailed('Task update failed'));
     }
   } catch (error) {
     yield* put(tasksActions.editTaskLocally(currentTaskData));
+    yield* put(tasksActions.tasksActionFailed('Task update failed'));
   }
 }
 
@@ -100,6 +106,7 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
           taskIndex,
         }),
       );
+      yield* put(tasksActions.tasksActionFailed('Task deletion failed'));
     }
   } catch (error) {
     yield* put(
@@ -108,6 +115,7 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
         taskIndex,
       }),
     );
+    yield* put(tasksActions.tasksActionFailed('Task deletion failed'));
   }
 }
 
@@ -121,9 +129,11 @@ function* doCreateTaskSaga({ payload }: { type: PayloadAction['type']; payload: 
     if (response.status === 201) {
       const newTask: TaskModel = yield response.json();
       yield* put(tasksActions.createTaskLocallyAction(newTask));
+    } else {
+      yield* put(tasksActions.tasksActionFailed('Task creation failed'));
     }
   } catch (error) {
-    console.log(error);
+    yield* put(tasksActions.tasksActionFailed('Task creation failed'));
   }
 }
 
