@@ -43,7 +43,7 @@ export const tasksSlice = createSlice({
     },
     revertDeleteTask: (state, action: PayloadAction<{ task: TaskModel; taskIndex: number }>) => {
       state.ids.splice(action.payload.taskIndex, 0, action.payload.task.id);
-      state.byId[action.payload.taskIndex] = action.payload.task;
+      state.byId[action.payload.task.id] = action.payload.task;
     },
     editTaskLocally: (state, action: PayloadAction<TaskModel>) => {
       state.byId[action.payload.id] = action.payload;

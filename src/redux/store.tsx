@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, createAction } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import createSagaMiddleware from 'redux-saga';
@@ -9,6 +9,7 @@ const persistConfig = {
   key: 'root',
   storage,
 };
+export const rehydrationFinishedAction = createAction('store/rehydrationFinishedAction');
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -35,7 +36,10 @@ const configureAppStore = (initialState = {}) => {
 };
 
 export const store = configureAppStore();
-export const persistor = persistStore(store);
+
+export const persistor = persistStore(store, undefined, () => {
+  store.dispatch(rehydrationFinishedAction());
+});
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

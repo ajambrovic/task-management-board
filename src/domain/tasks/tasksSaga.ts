@@ -5,9 +5,10 @@ import {
   type TasksConvertedServerModel,
   type TasksServerModel,
 } from 'domain/tasks/tasksModel';
-import { selectTaskById, selectTaskIndex } from 'domain/tasks/tasksSelector';
+import { selectTaskById, selectTaskIndex, selectTasksIds } from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { isEqual } from 'lodash';
+import { rehydrationFinishedAction } from 'redux/store';
 import { call, put, select, takeEvery } from 'typed-redux-saga';
 import { API_TASKS_URL } from 'util/apiConstants';
 
@@ -31,6 +32,15 @@ export function* changeTaskStatus() {
   yield* takeEvery(tasksActions.changeTaskStatus.type, doChangeTaskStatus);
 }
 
+export function* loadInitialData() {
+  yield takeEvery(rehydrationFinishedAction.type, function* () {
+    const taskIds = yield* select(selectTasksIds);
+    if (taskIds.length === 0) {
+      yield* put(tasksActions.loadTasks());
+    }
+  });
+}
+
 function* doFetchTasksSaga({
   payload,
 }: {
@@ -48,19 +58,19 @@ function* doFetchTasksSaga({
   }
 }
 
-function* doEditTaskSaga({ data }: { type: PayloadAction['type']; data: TaskModel }) {
-  const currentTaskData = yield* select(selectTaskById, data.id);
-  if (isEqual(currentTaskData, data)) {
+function* doEditTaskSaga({ payload }: { type: PayloadAction['type']; payload: TaskModel }) {
+  const currentTaskData = yield* select(selectTaskById, payload.id);
+  if (isEqual(currentTaskData, payload)) {
     return;
   }
 
   try {
-    yield* put(tasksActions.editTaskLocally(data));
-    yield* call(fetch, `${API_TASKS_URL}/${data.id}`, {
+    yield* put(tasksActions.editTaskLocally(payload));
+    yield* call(fetch, `${API_TASKS_URL}/${payload.id}`, {
       ...DEFAULT_HEADERS,
       method: 'PATCH',
       body: JSON.stringify({
-        name: data.name,
+        name: payload.name,
       }),
     });
   } catch (error) {
@@ -68,15 +78,24 @@ function* doEditTaskSaga({ data }: { type: PayloadAction['type']; data: TaskMode
   }
 }
 
-function* doDeleteTaskSaga({ data: id }: { type: PayloadAction['type']; data: TaskModel['id'] }) {
+function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; payload: TaskModel['id'] }) {
   const currentTaskData = yield* select(selectTaskById, id);
   const taskIndex = yield* select(selectTaskIndex, id);
 
   try {
     yield* put(tasksActions.deleteTaskLocally(id));
-    yield* call(fetch, `${API_TASKS_URL}/${id}`, {
+
+    const result = yield* call(fetch, `${API_TASKS_URL}/${id}`, {
       method: 'DELETE',
     });
+    if (result.status !== 200) {
+      yield* put(
+        tasksActions.revertDeleteTask({
+          task: currentTaskData,
+          taskIndex,
+        }),
+      );
+    }
   } catch (error) {
     yield* put(
       tasksActions.revertDeleteTask({
