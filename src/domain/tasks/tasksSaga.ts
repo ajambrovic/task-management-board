@@ -1,5 +1,5 @@
 import { type TaskModel, type TasksConvertedServerModel, type TasksServerModel } from 'domain/tasks/tasksModel';
-import { selectTaskById } from 'domain/tasks/tasksSelector';
+import { selectTaskById, selectTaskIndex } from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { isEqual } from 'lodash';
 import { call, put, select, takeEvery } from 'typed-redux-saga';
@@ -11,6 +11,10 @@ export function* fetchTasksSaga() {
 
 export function* editTaskSaga() {
   yield* takeEvery(tasksActions.editTask.type, doEditTaskSaga);
+}
+
+export function* deleteTaskSaga() {
+  yield* takeEvery(tasksActions.deleteTask.type, doDeleteTaskSaga);
 }
 
 function* doFetchTasksSaga({ payload }: { type: string; payload: { page: number; searchQuery: string } }) {
@@ -41,6 +45,25 @@ function* doEditTaskSaga({ data }: { type: string; data: TaskModel }) {
     });
   } catch (error) {
     yield* put(tasksActions.editTask(currentTaskData));
+  }
+}
+
+function* doDeleteTaskSaga({ data: id }: { type: string; data: TaskModel['id'] }) {
+  const currentTaskData = yield* select(selectTaskById, id);
+  const taskIndex = yield* select(selectTaskIndex, id);
+
+  try {
+    yield* put(tasksActions.deleteTask(id));
+    yield* call(fetch, `${API_TASKS_URL}/${id}`, {
+      method: 'DELETE',
+    });
+  } catch (error) {
+    yield* put(
+      tasksActions.revertDeleteTask({
+        task: currentTaskData,
+        taskIndex,
+      }),
+    );
   }
 }
 
