@@ -5,7 +5,12 @@ import {
   type TasksConvertedServerModel,
   type TasksServerModel,
 } from 'domain/tasks/tasksModel';
-import { selectTaskById, selectTaskIndex, selectTasksIds } from 'domain/tasks/tasksSelector';
+import {
+  selectCurrentTaskSearchQuery,
+  selectTaskById,
+  selectTaskIndex,
+  selectTasksIds,
+} from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { isEqual } from 'lodash';
 import { rehydrationFinishedAction } from 'redux/store';
@@ -35,26 +40,29 @@ export function* changeTaskStatus() {
 export function* loadInitialData() {
   yield takeEvery(rehydrationFinishedAction.type, function* () {
     const taskIds = yield* select(selectTasksIds);
+    const currentSearch = yield* select(selectCurrentTaskSearchQuery);
     if (taskIds.length === 0) {
-      yield* put(tasksActions.loadTasks());
+      yield* put(tasksActions.loadTasks(currentSearch));
     } else {
       yield* put(tasksActions.rehydrationFinished());
     }
   });
 }
 
-function* doFetchTasksSaga({ payload }: { type: PayloadAction['type']; payload: { searchQuery: string } }) {
+function* doFetchTasksSaga({ payload }: { type: PayloadAction['type']; payload: string }) {
   try {
-    const URL = `${API_TASKS_URL}`;
+    const URL = `${API_TASKS_URL}?q=${payload}`;
     const response = yield* call(fetch, URL);
     if (response.status === 200) {
       const tasksData: TasksServerModel = yield response.json();
-      yield* put(tasksActions.tasksLoadSuccess(convertTasksServerDataToLocalData(tasksData)));
+      yield* put(
+        tasksActions.tasksLoadSuccess({ data: convertTasksServerDataToLocalData(tasksData), searchQuery: payload }),
+      );
     } else {
-      yield* put(tasksActions.tasksActionFailed('Saving to server failed'));
+      yield* put(tasksActions.tasksActionFailed('Loading from server failed'));
     }
   } catch (error) {
-    yield* put(tasksActions.tasksActionFailed('Saving to server failed'));
+    yield* put(tasksActions.tasksActionFailed('Loading from server failed'));
   }
 }
 

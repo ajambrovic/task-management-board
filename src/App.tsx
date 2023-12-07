@@ -1,3 +1,4 @@
+import { Header } from 'components/Header/Header';
 import { AddNewTask } from 'components/Tasks/AddNewTask';
 import { Tasks } from 'components/Tasks/Tasks';
 import { ToastAlert } from 'components/ToastAlerts/ToastAlert';
@@ -10,6 +11,7 @@ function App(): JSX.Element {
     <>
       <ToastAlert />
       <Container fluid>
+        <Header />
         <Row className="p-3">
           <Tasks taskStatus={TaskStatus.ToDo}></Tasks>
           <Tasks taskStatus={TaskStatus.InProgress}></Tasks>
