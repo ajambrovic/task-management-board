@@ -1,4 +1,10 @@
-import { type TaskModel, type TasksConvertedServerModel, type TasksServerModel } from 'domain/tasks/tasksModel';
+import { type PayloadAction } from '@reduxjs/toolkit';
+import {
+  type TaskModel,
+  type TaskStatus,
+  type TasksConvertedServerModel,
+  type TasksServerModel,
+} from 'domain/tasks/tasksModel';
 import { selectTaskById, selectTaskIndex } from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { isEqual } from 'lodash';
@@ -17,7 +23,20 @@ export function* deleteTaskSaga() {
   yield* takeEvery(tasksActions.deleteTask.type, doDeleteTaskSaga);
 }
 
-function* doFetchTasksSaga({ payload }: { type: string; payload: { page: number; searchQuery: string } }) {
+export function* createTaskSaga() {
+  yield* takeEvery(tasksActions.createTask.type, doCreateTaskSaga);
+}
+
+export function* changeTaskStatus() {
+  yield* takeEvery(tasksActions.changeTaskStatus.type, doChangeTaskStatus);
+}
+
+function* doFetchTasksSaga({
+  payload,
+}: {
+  type: PayloadAction['type'];
+  payload: { page: number; searchQuery: string };
+}) {
   try {
     const response = yield* call(fetch, `${API_TASKS_URL}?_page=${payload.page}&q=${payload.searchQuery}`);
     const tasksData: TasksServerModel = yield response.json();
@@ -28,14 +47,14 @@ function* doFetchTasksSaga({ payload }: { type: string; payload: { page: number;
   }
 }
 
-function* doEditTaskSaga({ data }: { type: string; data: TaskModel }) {
+function* doEditTaskSaga({ data }: { type: PayloadAction['type']; data: TaskModel }) {
   const currentTaskData = yield* select(selectTaskById, data.id);
   if (isEqual(currentTaskData, data)) {
     return;
   }
 
   try {
-    yield* put(tasksActions.editTask(data));
+    yield* put(tasksActions.editTaskLocally(data));
     yield* call(fetch, `${API_TASKS_URL}/${data.id}`, {
       ...DEFAULT_HEADERS,
       method: 'PATCH',
@@ -44,16 +63,16 @@ function* doEditTaskSaga({ data }: { type: string; data: TaskModel }) {
       }),
     });
   } catch (error) {
-    yield* put(tasksActions.editTask(currentTaskData));
+    yield* put(tasksActions.editTaskLocally(currentTaskData));
   }
 }
 
-function* doDeleteTaskSaga({ data: id }: { type: string; data: TaskModel['id'] }) {
+function* doDeleteTaskSaga({ data: id }: { type: PayloadAction['type']; data: TaskModel['id'] }) {
   const currentTaskData = yield* select(selectTaskById, id);
   const taskIndex = yield* select(selectTaskIndex, id);
 
   try {
-    yield* put(tasksActions.deleteTask(id));
+    yield* put(tasksActions.deleteTaskLocally(id));
     yield* call(fetch, `${API_TASKS_URL}/${id}`, {
       method: 'DELETE',
     });
@@ -65,6 +84,33 @@ function* doDeleteTaskSaga({ data: id }: { type: string; data: TaskModel['id'] }
       }),
     );
   }
+}
+
+function* doCreateTaskSaga({ data }: { type: PayloadAction['type']; data: TaskModel }) {
+  try {
+    const response = yield* call(fetch, `${API_TASKS_URL}`, {
+      method: 'POST',
+      ...DEFAULT_HEADERS,
+      body: JSON.stringify({
+        data,
+      }),
+    });
+    const newTask: TaskModel = yield response.json();
+    yield* put(tasksActions.createTaskLocallyAction(newTask));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* doChangeTaskStatus({
+  data,
+}: {
+  type: PayloadAction['type'];
+  data: { taskStatus: TaskStatus; id: TaskModel['id'] };
+}) {
+  const currentTaskData = yield* select(selectTaskById, data.id);
+  currentTaskData.status = data.taskStatus;
+  yield* put(tasksActions.editTask(currentTaskData));
 }
 
 const DEFAULT_HEADERS = {
