@@ -20,7 +20,7 @@ export function selectTasksNetworkStatus(state: RootState) {
   return selectTasks(state).networkRequestStatus;
 }
 
-function selectTasksIds(state: RootState) {
+export function selectTasksIds(state: RootState) {
   return selectTasks(state).ids;
 }
 

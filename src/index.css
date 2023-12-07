@@ -4,6 +4,7 @@ body {
     'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: transparent;
 }
 
 code {
@@ -34,27 +35,17 @@ code {
 .sortable-item:hover {
   background-color: rgba(0, 0, 0, 0.01) !important;
 }
-/*
-.bg-image {
-  position: relative;
-  overflow: hidden;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  background-image: url(bgimage.jpeg);
-  height: 100vh;
-}*/
-.bg-image {
+
+html {
   background: url(bgimage.jpeg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  height: 100vh;
 }
 
 @media (max-width: 575px) {
-  .bg-image {
+  html {
     background-image: url(bgimage-mobile.jpg);
   }
 }
@@ -66,7 +57,7 @@ code {
 }
 
 @media (min-width: 576px) and (max-width: 1199px) {
-  .bg-image {
+  html {
     background-image: url(bgimage-tablet.jpg);
   }
 }

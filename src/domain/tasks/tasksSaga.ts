@@ -38,7 +38,8 @@ function* doFetchTasksSaga({
   payload: { page: number; searchQuery: string };
 }) {
   try {
-    const response = yield* call(fetch, `${API_TASKS_URL}?_page=${payload.page}&q=${payload.searchQuery}`);
+    const URL = `${API_TASKS_URL}`;
+    const response = yield* call(fetch, URL);
     const tasksData: TasksServerModel = yield response.json();
 
     yield* put(tasksActions.tasksLoadSuccess(convertTasksServerDataToLocalData(tasksData)));
