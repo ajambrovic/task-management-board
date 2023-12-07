@@ -1,4 +1,11 @@
-import { createTaskSaga, deleteTaskSaga, editTaskSaga, fetchTasksSaga, loadInitialData } from 'domain/tasks/tasksSaga';
+import {
+  changeTaskStatus,
+  createTaskSaga,
+  deleteTaskSaga,
+  editTaskSaga,
+  fetchTasksSaga,
+  loadInitialData,
+} from 'domain/tasks/tasksSaga';
 import { all, fork } from 'redux-saga/effects';
 
 export default function* rootSaga() {
@@ -7,6 +14,7 @@ export default function* rootSaga() {
     fork(editTaskSaga),
     fork(deleteTaskSaga),
     fork(createTaskSaga),
+    fork(changeTaskStatus),
     fork(loadInitialData),
   ]);
 }

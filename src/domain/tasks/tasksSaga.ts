@@ -43,12 +43,7 @@ export function* loadInitialData() {
   });
 }
 
-function* doFetchTasksSaga({
-  payload,
-}: {
-  type: PayloadAction['type'];
-  payload: { page: number; searchQuery: string };
-}) {
+function* doFetchTasksSaga({ payload }: { type: PayloadAction['type']; payload: { searchQuery: string } }) {
   try {
     const URL = `${API_TASKS_URL}`;
     const response = yield* call(fetch, URL);
@@ -138,14 +133,13 @@ function* doCreateTaskSaga({ payload }: { type: PayloadAction['type']; payload: 
 }
 
 function* doChangeTaskStatus({
-  data,
+  payload,
 }: {
   type: PayloadAction['type'];
-  data: { taskStatus: TaskStatus; id: TaskModel['id'] };
+  payload: { taskStatus: TaskStatus; id: TaskModel['id'] };
 }) {
-  const currentTaskData = yield* select(selectTaskById, data.id);
-  currentTaskData.status = data.taskStatus;
-  yield* put(tasksActions.editTask(currentTaskData));
+  const currentTaskData = yield* select(selectTaskById, payload.id);
+  yield* put(tasksActions.editTask({ ...currentTaskData, status: payload.taskStatus }));
 }
 
 const DEFAULT_HEADERS = {
