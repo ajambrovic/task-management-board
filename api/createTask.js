@@ -5,10 +5,10 @@ const { random, upperFirst } = require('lodash');
 const teamMembers = ['Pero Perić', 'Ivo Ivić', 'Ivan Horvat'];
 const status = [0, 1, 2];
 
-function createTask(name) {
+function createTaskDb() {
   return {
     id: faker.string.uuid(),
-    name: name.length > 0 ? name : faker.lorem.words(random(2, 4)).split(' ').map(upperFirst).join(' '),
+    name: faker.lorem.words(random(2, 4)).split(' ').map(upperFirst).join(' '),
     status: status[random(0, status.length - 1)],
     description: faker.lorem.words(random(1, 2)).split(' ').map(upperFirst).join(' '),
     dueByTimestamp: new Date().getTime(),
@@ -17,4 +17,14 @@ function createTask(name) {
   };
 }
 
-module.exports = createTask;
+function createTask(task) {
+  return {
+    ...task,
+    id: faker.string.uuid(),
+  };
+}
+
+module.exports = {
+  createTaskDb,
+  createTask,
+};

@@ -148,7 +148,7 @@ export const TaskForm = ({
   );
 };
 
-function generateTask(form: HTMLFormElement, taskId: TaskModel['id']): TaskModel {
+function generateTask(form: HTMLFormElement, id: TaskModel['id']): TaskModel {
   const name = (form.elements[0] as HTMLInputElement).value;
   const statusString = (form.elements[1] as HTMLSelectElement).value;
   const description = (form.elements[2] as HTMLTextAreaElement).value;
@@ -159,7 +159,6 @@ function generateTask(form: HTMLFormElement, taskId: TaskModel['id']): TaskModel
   const status: TaskStatus = parseInt(statusString, 10) as TaskStatus;
   const priority: TaskPriority = parseInt(priorityString, 10) as TaskPriority;
   const dueByTimestamp = new Date(dueDateString).getTime();
-  const id = taskId !== '' ? taskId : new Date().getTime().toString();
 
   return {
     name,

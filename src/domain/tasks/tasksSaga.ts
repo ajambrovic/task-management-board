@@ -50,9 +50,10 @@ function* doFetchTasksSaga({
   try {
     const URL = `${API_TASKS_URL}`;
     const response = yield* call(fetch, URL);
-    const tasksData: TasksServerModel = yield response.json();
-
-    yield* put(tasksActions.tasksLoadSuccess(convertTasksServerDataToLocalData(tasksData)));
+    if (response.status === 200) {
+      const tasksData: TasksServerModel = yield response.json();
+      yield* put(tasksActions.tasksLoadSuccess(convertTasksServerDataToLocalData(tasksData)));
+    }
   } catch (error) {
     yield* put(tasksActions.tasksLoadFailed);
   }
@@ -66,13 +67,16 @@ function* doEditTaskSaga({ payload }: { type: PayloadAction['type']; payload: Ta
 
   try {
     yield* put(tasksActions.editTaskLocally(payload));
-    yield* call(fetch, `${API_TASKS_URL}/${payload.id}`, {
+    const response = yield* call(fetch, `${API_TASKS_URL}/${payload.id}`, {
       ...DEFAULT_HEADERS,
       method: 'PATCH',
       body: JSON.stringify({
         name: payload.name,
       }),
     });
+    if (response.status !== 200) {
+      yield* put(tasksActions.editTaskLocally(currentTaskData));
+    }
   } catch (error) {
     yield* put(tasksActions.editTaskLocally(currentTaskData));
   }
@@ -85,10 +89,11 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
   try {
     yield* put(tasksActions.deleteTaskLocally(id));
 
-    const result = yield* call(fetch, `${API_TASKS_URL}/${id}`, {
+    const response = yield* call(fetch, `${API_TASKS_URL}/${id}`, {
       method: 'DELETE',
     });
-    if (result.status !== 200) {
+
+    if (response.status !== 200) {
       yield* put(
         tasksActions.revertDeleteTask({
           task: currentTaskData,
@@ -106,17 +111,17 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
   }
 }
 
-function* doCreateTaskSaga({ data }: { type: PayloadAction['type']; data: TaskModel }) {
+function* doCreateTaskSaga({ payload }: { type: PayloadAction['type']; payload: TaskModel }) {
   try {
     const response = yield* call(fetch, `${API_TASKS_URL}`, {
       method: 'POST',
       ...DEFAULT_HEADERS,
-      body: JSON.stringify({
-        data,
-      }),
+      body: JSON.stringify(payload),
     });
-    const newTask: TaskModel = yield response.json();
-    yield* put(tasksActions.createTaskLocallyAction(newTask));
+    if (response.status === 201) {
+      const newTask: TaskModel = yield response.json();
+      yield* put(tasksActions.createTaskLocallyAction(newTask));
+    }
   } catch (error) {
     console.log(error);
   }
