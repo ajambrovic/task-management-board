@@ -1,6 +1,20 @@
-import {all, fork, type AllEffect, type ForkEffect} from 'redux-saga/effects';
-import counterSagas from './counter/saga';
+import {
+  changeTaskStatus,
+  createTaskSaga,
+  deleteTaskSaga,
+  editTaskSaga,
+  fetchTasksSaga,
+  loadInitialData,
+} from 'domain/tasks/tasksSaga';
+import { all, fork } from 'redux-saga/effects';
 
-export default function* rootSaga(): Generator<AllEffect<ForkEffect<void>>, void, unknown> {
-  yield all([fork(counterSagas)]);
+export default function* rootSaga() {
+  yield all([
+    fork(fetchTasksSaga),
+    fork(editTaskSaga),
+    fork(deleteTaskSaga),
+    fork(createTaskSaga),
+    fork(changeTaskStatus),
+    fork(loadInitialData),
+  ]);
 }

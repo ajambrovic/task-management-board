@@ -1,13 +1,14 @@
-import {TaskPriority, type TaskModel} from 'domain/tasks/tasksModel';
-import {selectTaskById} from 'domain/tasks/tasksSelector';
+import { TaskPriority, type TaskModel } from 'domain/tasks/tasksModel';
+import { selectTaskById } from 'domain/tasks/tasksSelector';
+import { tasksActions } from 'domain/tasks/tasksSlice';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import {useAppSelector} from 'redux/hooks';
-import {convertTimestampToDate} from 'util/timeFormat';
-import {EditTask} from './EditTask';
+import { useAppSelector } from 'redux/hooks';
+import { convertTimestampToDate } from 'util/timeFormat';
+import { TaskForm } from './TaskForm';
 
-export const Task = ({taskId}: {taskId: TaskModel['id']}) => {
-  const task = useAppSelector(state => selectTaskById(state, taskId));
+export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
+  const task = useAppSelector((state) => selectTaskById(state, taskId));
   return (
     <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId}>
       <Card.Body className="sortable-item rounded bg-white shadow-2 mb-2">
@@ -18,7 +19,7 @@ export const Task = ({taskId}: {taskId: TaskModel['id']}) => {
           <br />
           Task Priority: {TaskPriority[task.priority]}
         </Card.Text>
-        <EditTask taskId={taskId} />
+        <TaskForm task={task} action={tasksActions.editTask} shouldShowDelete buttonTitle="Edit task" />
       </Card.Body>
     </ListGroup.Item>
   );

@@ -1,17 +1,26 @@
-import {TaskPriority, TaskStatus, type TaskModel} from 'domain/tasks/tasksModel';
-import {selectTaskById} from 'domain/tasks/tasksSelector';
-import {tasksActions} from 'domain/tasks/tasksSlice';
-import {useState} from 'react';
+import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
+import { tasksActions } from 'domain/tasks/tasksSlice';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import {useAppDispatch, useAppSelector} from 'redux/hooks';
-import {convertTimestampToDate} from 'util/timeFormat';
+import { useAppDispatch } from 'redux/hooks';
+import { convertTimestampToDate } from 'util/timeFormat';
 
-export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
-  const task = useAppSelector(state => selectTaskById(state, taskId));
+export const TaskForm = ({
+  task,
+  action,
+  shouldShowDelete = false,
+  buttonTitle,
+}: {
+  task: TaskModel;
+  action: ActionCreatorWithPayload<TaskModel>;
+  buttonTitle: string;
+  shouldShowDelete?: boolean;
+}) => {
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -26,38 +35,41 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
   };
 
   const handleSubmit = () => {
-    const form = document.getElementById('newTaskFrom');
+    const form = document.getElementById('taskForm');
     if (form === null) {
       return;
     }
     setValidated(true);
     if ((form as HTMLFormElement).checkValidity()) {
-      dispatch(tasksActions.editTask(generateTask(form as HTMLFormElement, taskId)));
+      dispatch(action(generateTask(form as HTMLFormElement, task.id)));
       handleClose();
     }
   };
 
   const handleDelete = () => {
-    dispatch(tasksActions.deleteTask(taskId));
+    dispatch(tasksActions.deleteTask(task.id));
   };
+
+  const defaultDate = task.dueByTimestamp !== 0 ? convertTimestampToDate(task.dueByTimestamp) : undefined;
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow} className="ms-auto">
-        Edit task
+      <Button variant="primary" onClick={handleShow}>
+        {buttonTitle}
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit task</Modal.Title>
+          <Modal.Title>{buttonTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form noValidate validated={validated} onSubmit={handleSubmit} id={'newTaskFrom'}>
+          <Form noValidate validated={validated} onSubmit={handleSubmit} id={'taskForm'}>
             <Form.Group className="mb-3" controlId="taskName" as={Row}>
               <Form.Label column sm={4}>
                 Task name
               </Form.Label>
               <Col sm={8}>
                 <Form.Control type="text" placeholder="Enter task name" required defaultValue={task.name} />
+                <Form.Control.Feedback type="invalid">Please enter a task name</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group className="mb-3" controlId="taskStatus" as={Row}>
@@ -78,6 +90,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
               </Form.Label>
               <Col sm={8}>
                 <Form.Control as="textarea" rows={3} required defaultValue={task.description} />
+                <Form.Control.Feedback type="invalid">Please enter a task description</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group className="mb-3" controlId="taskPriority" as={Row}>
@@ -94,7 +107,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="teamMember" as={Row}>
               <Form.Label column sm={4}>
-                Assigned team member name
+                Assigned team member
               </Form.Label>
               <Col sm={8}>
                 <Form.Control
@@ -103,6 +116,7 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
                   required
                   defaultValue={task.assignedTeamMember}
                 />
+                <Form.Control.Feedback type="invalid">Please assign a team member</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group className="mb-3" controlId="dueDate" as={Row}>
@@ -110,15 +124,18 @@ export const EditTask = ({taskId}: {taskId: TaskModel['id']}) => {
                 Due date
               </Form.Label>
               <Col sm={8}>
-                <Form.Control type="date" required defaultValue={convertTimestampToDate(task.dueByTimestamp)} />
+                <Form.Control type="date" required defaultValue={defaultDate} />
+                <Form.Control.Feedback type="invalid">Please select a valid due date</Form.Control.Feedback>
               </Col>
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleDelete}>
-            Delete Task
-          </Button>
+          {shouldShowDelete && (
+            <Button variant="danger" onClick={handleDelete}>
+              Delete Task
+            </Button>
+          )}
           <Button variant="secondary" onClick={handleClose} className="ms-auto">
             Close
           </Button>

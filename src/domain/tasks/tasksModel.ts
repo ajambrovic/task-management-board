@@ -1,4 +1,4 @@
-import {type NetworkRequestModel} from 'domain/networkRequest/networkRequestModel';
+import { type NetworkRequestModel } from 'domain/networkRequest/networkRequestModel';
 
 export type TasksServerModel = TaskModel[];
 
@@ -9,9 +9,7 @@ export type TasksConvertedServerModel = {
   byId: Record<TaskModel['id'], TaskModel>;
 };
 
-export type TasksLocalModal = NetworkRequestModel & {
-  initialLoad: boolean;
-};
+export type TasksLocalModal = NetworkRequestModel & { error: string };
 
 export type TaskModel = {
   id: string;

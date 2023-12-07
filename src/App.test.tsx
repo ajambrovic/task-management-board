@@ -1,8 +1,8 @@
-import {render, screen} from '@testing-library/react';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
+import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import App from './App';
-import {persistor, store} from './redux/store';
+import { persistor, store } from './redux/store';
 
 test('renders learn react link', () => {
   render(

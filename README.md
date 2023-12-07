@@ -14,6 +14,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
+### `npm run start:api`
+
+Runs the mock backend, pre-populates it with generated data. Data in the app is persisted in the local storage so when
+there's no data (initially or after `localStorage.clear()`), it will be retrieved from the mock backend. The backend is
+also used in CRUD operations.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
@@ -29,18 +35,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Dev notes
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Additional tests weren't implented since Puppeteer has issues working on M1 Mac and that+Jest was what I was going for
+2. A lot of accessibility is provied out of the box with Bootstrap; I also ran Lighthouse Accessibility check (after saving the page as HTML) and got 100
