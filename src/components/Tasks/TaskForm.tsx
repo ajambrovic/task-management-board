@@ -1,14 +1,14 @@
-import {type ActionCreatorWithPayload} from '@reduxjs/toolkit';
-import {TaskPriority, TaskStatus, type TaskModel} from 'domain/tasks/tasksModel';
-import {tasksActions} from 'domain/tasks/tasksSlice';
-import {useState} from 'react';
+import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
+import { tasksActions } from 'domain/tasks/tasksSlice';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import {useAppDispatch} from 'redux/hooks';
-import {convertTimestampToDate} from 'util/timeFormat';
+import { useAppDispatch } from 'redux/hooks';
+import { convertTimestampToDate } from 'util/timeFormat';
 
 export const TaskForm = ({
   task,

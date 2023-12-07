@@ -1,5 +1,5 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore} from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from './rootReducer';
@@ -20,7 +20,7 @@ const configureAppStore = (initialState = {}) => {
 
   const store = configureStore({
     reducer: persistedReducer,
-    middleware: gDM =>
+    middleware: (gDM) =>
       gDM({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
