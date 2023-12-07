@@ -6,6 +6,7 @@ const initialState: TasksReduxModel = {
   networkRequestStatus: NetworkRequestStatus.Success,
   ids: [],
   byId: {},
+  searchQuery: '',
   error: '',
 };
 
@@ -13,15 +14,16 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    tasksLoadSuccess: (state, action: PayloadAction<TasksConvertedServerModel>) => {
+    tasksLoadSuccess: (state, action: PayloadAction<{ data: TasksConvertedServerModel; searchQuery: string }>) => {
       return {
         ...state,
         byId: {
           ...state.byId,
-          ...action.payload.byId,
+          ...action.payload.data.byId,
         },
-        ids: [...state.ids, ...action.payload.ids],
+        ids: [...state.ids, ...action.payload.data.ids],
         networkRequestStatus: NetworkRequestStatus.Success,
+        searchQuery: action.payload.searchQuery,
         error: '',
       };
     },
@@ -31,8 +33,8 @@ export const tasksSlice = createSlice({
     tasksActionFailed: (state, action: PayloadAction<string>) => {
       return { ...state, networkRequestStatus: NetworkRequestStatus.Fail, error: action.payload };
     },
-    loadTasks: (state) => {
-      return { ...state, networkRequestStatus: NetworkRequestStatus.InProgress };
+    loadTasks: (state, action: PayloadAction<string>) => {
+      return { ...state, ids: [], byId: {}, networkRequestStatus: NetworkRequestStatus.InProgress };
     },
     createTaskLocallyAction: (state, action: PayloadAction<TaskModel>) => {
       state.byId[action.payload.id] = action.payload;

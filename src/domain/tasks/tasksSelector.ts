@@ -22,6 +22,10 @@ export const selectTasksByTaskStatus = createSelector(
   },
 );
 
+export const selectCurrentTaskSearchQuery = (state: RootState) => {
+  return selectTasks(state).searchQuery;
+};
+
 export const selectTaskLoadingError = (state: RootState) => {
   return selectTasks(state).error;
 };

@@ -9,7 +9,7 @@ export type TasksConvertedServerModel = {
   byId: Record<TaskModel['id'], TaskModel>;
 };
 
-export type TasksLocalModal = NetworkRequestModel & { error: string };
+export type TasksLocalModal = NetworkRequestModel & { error: string; searchQuery: string };
 
 export type TaskModel = {
   id: string;
