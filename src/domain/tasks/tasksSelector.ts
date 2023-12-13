@@ -1,26 +1,24 @@
-import { createSelector } from '@reduxjs/toolkit';
 import { type RootState } from 'redux/store';
-import { type TaskModel } from './tasksModel';
+import { type TaskModel, type TaskStatus } from './tasksModel';
 
 export const selectTaskIndex = (state: RootState, taskId: TaskModel['id']) => {
   return selectTasksIds(state).findIndex((id) => id === taskId);
 };
 
-// TODO: https://redux.js.org/usage/deriving-data-selectors#reselect-usage-patterns-and-limitations
-export const selectTasksByTaskStatus = createSelector(
-  [selectTasksData, (_, taskStatus) => taskStatus, selectTasksIds, (_, taskIds) => taskIds],
-  (tasks, taskStatus, taskIds) => {
-    // Filter tasks based on taskStatus
-    const filteredTasks = Object.values(tasks).filter((task) => task.status === taskStatus);
+export const selectTaskIdsByTaskStatus = (state: RootState, taskStatus: TaskStatus) => {
+  const tasks = selectTasksData(state);
+  const taskIds = selectTasksIds(state);
+  const filteredTasks = Object.values(tasks).filter((task) => task.status === taskStatus);
+  // Sort tasks based on the order of taskIds
+  const sortedTaskIds: TaskModel['id'][] = taskIds
+    .map((taskId) => {
+      const task = filteredTasks.find((t) => t.id === taskId);
+      return task != null ? task.id : undefined;
+    })
+    .filter((taskId): taskId is TaskModel['id'] => taskId !== undefined);
 
-    // Sort tasks based on the order of taskIds
-    const sortedTasks: TaskModel[] = taskIds
-      .map((taskId) => filteredTasks.find((task) => task.id === taskId))
-      .filter((task): task is TaskModel => task !== undefined);
-
-    return sortedTasks;
-  },
-);
+  return sortedTaskIds;
+};
 
 export const selectCurrentTaskSearchQuery = (state: RootState) => {
   return selectTasks(state).searchQuery;

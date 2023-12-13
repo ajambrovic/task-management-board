@@ -1,5 +1,5 @@
 import { TaskStatus } from 'domain/tasks/tasksModel';
-import { selectTasksByTaskStatus } from 'domain/tasks/tasksSelector';
+import { selectTaskIdsByTaskStatus } from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { useCallback } from 'react';
 import Card from 'react-bootstrap/Card';
@@ -9,7 +9,7 @@ import { Task } from './Task';
 import './tasksStyle.css';
 
 export const Tasks = ({ taskStatus }: { taskStatus: TaskStatus }) => {
-  const tasks = useAppSelector((state) => selectTasksByTaskStatus(state, taskStatus));
+  const tasks = useAppSelector((state) => selectTaskIdsByTaskStatus(state, taskStatus));
   const dispatch = useAppDispatch();
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLElement>) => {
@@ -35,7 +35,7 @@ export const Tasks = ({ taskStatus }: { taskStatus: TaskStatus }) => {
           <strong>{TaskStatus[taskStatus]}</strong>
         </Card.Header>
         {tasks.map((task) => (
-          <Task taskId={task.id} key={task.id} />
+          <Task taskId={task} key={task} />
         ))}
       </Card>
     </Col>
