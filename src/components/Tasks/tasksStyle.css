@@ -1,0 +1,8 @@
+.card {
+  background-color: #ebecf0;
+}
+
+.card-header {
+  background-color: hsla(0, 0%, 100%, 0);
+  border-bottom: hsla(0, 0%, 100%, 0);
+}

@@ -5,6 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { Task } from './Task';
+import './tasksStyle.css';
 
 export const Tasks = ({ taskStatus }: { taskStatus: TaskStatus }) => {
   const tasks = useAppSelector((state) => selectTasksByTaskStatus(state, taskStatus));
@@ -28,7 +29,7 @@ export const Tasks = ({ taskStatus }: { taskStatus: TaskStatus }) => {
 
   return (
     <Col md>
-      <Card onDrop={handleDrop} onDragOver={handleDragOver} className="card shadow-1-strong m-3 p-2 pb-0">
+      <Card onDrop={handleDrop} onDragOver={handleDragOver} className="shadow-1-strong m-3 p-2 pb-0">
         <Card.Header>
           <strong>{TaskStatus[taskStatus]}</strong>
         </Card.Header>

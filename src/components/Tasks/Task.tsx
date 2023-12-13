@@ -6,12 +6,13 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { useAppSelector } from 'redux/hooks';
 import { convertTimestampToDate } from 'util/timeFormat';
 import { TaskForm } from './TaskForm';
+import './taskStyle.css';
 
 export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
   const task = useAppSelector((state) => selectTaskById(state, taskId));
   return (
     <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId}>
-      <Card.Body className="sortable-item rounded bg-white shadow-2 mb-2">
+      <Card.Body className="bg-white mb-2">
         <Card.Title>{task.name}</Card.Title>
         <Card.Subtitle>Assigned to: {task.assignedTeamMember}</Card.Subtitle>
         <Card.Text>
