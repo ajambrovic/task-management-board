@@ -1,7 +1,7 @@
 import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
 import { tasksActions } from 'domain/tasks/tasksSlice';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -25,16 +25,16 @@ export const TaskForm = ({
   const [show, setShow] = useState(false);
   const [validated, setValidated] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setShow(false);
     setValidated(false);
-  };
+  }, []);
 
-  const handleShow = () => {
+  const handleShow = useCallback(() => {
     setShow(true);
-  };
+  }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const form = document.getElementById('taskForm');
     if (form === null) {
       return;
@@ -44,11 +44,11 @@ export const TaskForm = ({
       dispatch(action(generateTask(form as HTMLFormElement, task.id)));
       handleClose();
     }
-  };
+  }, []);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     dispatch(tasksActions.deleteTask(task.id));
-  };
+  }, []);
 
   const defaultDate = task.dueByTimestamp !== 0 ? convertTimestampToDate(task.dueByTimestamp) : undefined;
 
