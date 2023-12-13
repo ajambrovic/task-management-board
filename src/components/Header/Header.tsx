@@ -1,7 +1,7 @@
 import { selectCurrentTaskSearchQuery } from 'domain/tasks/tasksSelector';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { debounce } from 'lodash';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -13,12 +13,11 @@ export const Header = () => {
   const dispatch = useDispatch();
   const searchQuery = useAppSelector(selectCurrentTaskSearchQuery);
 
-  const debounceSearching = useMemo(
-    () =>
-      debounce((searchItem: string) => {
-        dispatch(tasksActions.loadTasks(searchItem));
-      }, 500),
-    [dispatch],
+  const debounceSearching = useCallback(
+    debounce((searchItem: string) => {
+      dispatch(tasksActions.loadTasks(searchItem));
+    }, 500),
+    [],
   );
 
   return (
