@@ -97,20 +97,12 @@ export const TaskForm = ({
                     </Form.Select>
                   </Col>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="teamMember" as={Row}>
-                  <Form.Label column sm={4}>
-                    Assigned team member
-                  </Form.Label>
-                  <Col sm={8}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter assigned team member name"
-                      required
-                      defaultValue={task.assignedTeamMember}
-                    />
-                    <Form.Control.Feedback type="invalid">Please assign a team member</Form.Control.Feedback>
-                  </Col>
-                </Form.Group>
+                <FormTextField
+                  controlId="teamMember"
+                  label="Assigned team member"
+                  placeholder="Enter assigned team member name"
+                  name={'assignedTeamMember'}
+                />
                 <Form.Group className="mb-3" controlId="dueDate" as={Row}>
                   <Form.Label column sm={4}>
                     Due date

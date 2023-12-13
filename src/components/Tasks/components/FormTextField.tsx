@@ -1,16 +1,12 @@
 import { Field, type FieldProps } from 'formik';
-import { type FC } from 'react';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-type CustomInputProps = { controlId: string; label: string; placeholder: string; name: string };
-export const FormTextField: FC<CustomInputProps> = ({ controlId, label, placeholder, name }) => {
+
+export const FormTextField = ({ controlId, label, placeholder, name }: FormTextFieldInputProps) => {
   return (
     <Field name={name}>
-      {({
-        field, // { name, value, onChange, onBlur }
-        form, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-      }: FieldProps) => {
+      {({ field, form }: FieldProps<string>) => {
         const isValid = !form.errors[field.name];
         const isInvalid = form.touched[field.name] && !isValid;
 
@@ -35,3 +31,5 @@ export const FormTextField: FC<CustomInputProps> = ({ controlId, label, placehol
     </Field>
   );
 };
+
+type FormTextFieldInputProps = { controlId: string; label: string; placeholder: string; name: string };
