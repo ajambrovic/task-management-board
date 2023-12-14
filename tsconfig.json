@@ -28,7 +28,8 @@
   },
   "include": [
     "src/**/*",
-    "api/**/*"
+    "api/**/*",
+    "*.config.js",
   ],
   "importHelpers": true
 }
