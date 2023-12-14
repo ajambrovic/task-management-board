@@ -32,4 +32,4 @@ export const FormTextField = ({ controlId, label, placeholder, name }: FormTextF
   );
 };
 
-type FormTextFieldInputProps = { controlId: string; label: string; placeholder: string; name: string };
+export type FormTextFieldInputProps = { controlId: string; label: string; placeholder: string; name: string };

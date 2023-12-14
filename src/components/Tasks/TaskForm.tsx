@@ -1,4 +1,5 @@
 import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { FormSelectField } from 'components/Tasks/components/FormSelectField';
 import { FormTextField } from 'components/Tasks/components/FormTextField';
 import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
 import { tasksActions } from 'domain/tasks/tasksSlice';
@@ -64,18 +65,15 @@ export const TaskForm = ({
             {({ handleSubmit, handleChange, values, errors, isValid, isSubmitting }) => (
               <Form noValidate id="my-form" onSubmit={handleSubmit}>
                 <FormTextField controlId="taskName" label="Task name" placeholder="Enter task name" name={'name'} />
-                <Form.Group className="mb-3" controlId="taskStatus" as={Row}>
-                  <Form.Label column sm={4}>
-                    Task status
-                  </Form.Label>
-                  <Col sm={8}>
-                    <Form.Select aria-label="Select task status" className="mb-3" defaultValue={task.status}>
-                      <option value={TaskStatus.ToDo}>To do</option>
-                      <option value={TaskStatus.InProgress}>In progress</option>
-                      <option value={TaskStatus.Completed}>Completed</option>
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
+                <FormSelectField
+                  controlId="taskStatus"
+                  label="Task status"
+                  name={'status'}
+                  placeholder="Select task status">
+                  <option value={TaskStatus.ToDo}>To do</option>
+                  <option value={TaskStatus.InProgress}>In progress</option>
+                  <option value={TaskStatus.Completed}>Completed</option>
+                </FormSelectField>
                 <Form.Group className="mb-3" controlId="taskDescription" as={Row}>
                   <Form.Label column sm={4}>
                     Description
@@ -85,18 +83,15 @@ export const TaskForm = ({
                     <Form.Control.Feedback type="invalid">Please enter a task description</Form.Control.Feedback>
                   </Col>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="taskPriority" as={Row}>
-                  <Form.Label column sm={4}>
-                    Task priority
-                  </Form.Label>
-                  <Col sm={8}>
-                    <Form.Select aria-label="Select task priority" defaultValue={task.priority}>
-                      <option value={TaskPriority.Medium}>Medium</option>
-                      <option value={TaskPriority.High}>High</option>
-                      <option value={TaskPriority.Low}>Low</option>
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
+                <FormSelectField
+                  controlId="taskPriority"
+                  label="Select task priority"
+                  name={'priority'}
+                  placeholder="Select task priority">
+                  <option value={TaskPriority.Medium}>Medium</option>
+                  <option value={TaskPriority.High}>High</option>
+                  <option value={TaskPriority.Low}>Low</option>
+                </FormSelectField>
                 <FormTextField
                   controlId="teamMember"
                   label="Assigned team member"
