@@ -9,7 +9,6 @@ export const selectTaskIndex = (state: RootState, taskId: TaskModel['id']) => {
 export const selectTaskIdsByTaskStatus = createSelector(
   [selectTasksData, (_, taskStatus) => taskStatus, selectTasksIds, (_, taskIds) => taskIds],
   (tasks, taskStatus, taskIds) => {
-    // Filter tasks based on taskStatus
     const filteredTasks = Object.values(tasks).filter((task) => task.status === taskStatus);
 
     const sortedTaskIds: TaskModel['id'][] = taskIds
