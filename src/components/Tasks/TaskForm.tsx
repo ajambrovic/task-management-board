@@ -1,172 +1,88 @@
 import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { FormSelectField } from 'components/Tasks/components/FormSelectField';
+import { FormTextAreaField } from 'components/Tasks/components/FormTextAreaField';
+import { FormTextField } from 'components/Tasks/components/FormTextField';
 import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
-import { tasksActions } from 'domain/tasks/tasksSlice';
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
+import { Formik } from 'formik';
 import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
 import { useAppDispatch } from 'redux/hooks';
 import { convertTimestampToDate } from 'util/timeFormat';
 
-export const TaskForm = ({
-  task,
-  action,
-  shouldShowDelete = false,
-  buttonTitle,
-}: {
-  task: TaskModel;
-  action: ActionCreatorWithPayload<TaskModel>;
-  buttonTitle: string;
-  shouldShowDelete?: boolean;
-}) => {
+export const TaskForm = ({ task, action, id, handleClose }: TaskFormProps) => {
   const dispatch = useAppDispatch();
-  const [show, setShow] = useState(false);
-  const [validated, setValidated] = useState(false);
-
-  const handleClose = () => {
-    setShow(false);
-    setValidated(false);
-  };
-
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const handleSubmit = () => {
-    const form = document.getElementById('taskForm');
-    if (form === null) {
-      return;
-    }
-    setValidated(true);
-    if ((form as HTMLFormElement).checkValidity()) {
-      dispatch(action(generateTask(form as HTMLFormElement, task.id)));
-      handleClose();
-    }
-  };
-
-  const handleDelete = () => {
-    dispatch(tasksActions.deleteTask(task.id));
-  };
-
-  const defaultDate = task.dueByTimestamp !== 0 ? convertTimestampToDate(task.dueByTimestamp) : undefined;
 
   return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        {buttonTitle}
-      </Button>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{buttonTitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form noValidate validated={validated} onSubmit={handleSubmit} id={'taskForm'}>
-            <Form.Group className="mb-3" controlId="taskName" as={Row}>
-              <Form.Label column sm={4}>
-                Task name
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control type="text" placeholder="Enter task name" required defaultValue={task.name} />
-                <Form.Control.Feedback type="invalid">Please enter a task name</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="taskStatus" as={Row}>
-              <Form.Label column sm={4}>
-                Task status
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Select aria-label="Select task status" className="mb-3" defaultValue={task.status}>
-                  <option value={TaskStatus.ToDo}>To do</option>
-                  <option value={TaskStatus.InProgress}>In progress</option>
-                  <option value={TaskStatus.Completed}>Completed</option>
-                </Form.Select>
-              </Col>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="taskDescription" as={Row}>
-              <Form.Label column sm={4}>
-                Description
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control as="textarea" rows={3} required defaultValue={task.description} />
-                <Form.Control.Feedback type="invalid">Please enter a task description</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="taskPriority" as={Row}>
-              <Form.Label column sm={4}>
-                Task priority
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Select aria-label="Select task priority" defaultValue={task.priority}>
-                  <option value={TaskPriority.Medium}>Medium</option>
-                  <option value={TaskPriority.High}>High</option>
-                  <option value={TaskPriority.Low}>Low</option>
-                </Form.Select>
-              </Col>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="teamMember" as={Row}>
-              <Form.Label column sm={4}>
-                Assigned team member
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter assigned team member name"
-                  required
-                  defaultValue={task.assignedTeamMember}
-                />
-                <Form.Control.Feedback type="invalid">Please assign a team member</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="dueDate" as={Row}>
-              <Form.Label column sm={4}>
-                Due date
-              </Form.Label>
-              <Col sm={8}>
-                <Form.Control type="date" required defaultValue={defaultDate} />
-                <Form.Control.Feedback type="invalid">Please select a valid due date</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          {shouldShowDelete && (
-            <Button variant="danger" onClick={handleDelete}>
-              Delete Task
-            </Button>
-          )}
-          <Button variant="secondary" onClick={handleClose} className="ms-auto">
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <Formik
+      initialValues={task}
+      validate={validateForm}
+      onSubmit={(values, { setSubmitting }) => {
+        dispatch(action(values));
+        setSubmitting(false);
+        handleClose();
+      }}>
+      {({ handleSubmit }) => (
+        <Form noValidate id={id} onSubmit={handleSubmit}>
+          <FormTextField controlId="taskName" label="Task name" placeholder="Enter task name" name={'name'} />
+          <FormSelectField controlId="taskStatus" label="Task status" name={'status'} placeholder="Select task status">
+            <option value={TaskStatus.ToDo}>To do</option>
+            <option value={TaskStatus.InProgress}>In progress</option>
+            <option value={TaskStatus.Completed}>Completed</option>
+          </FormSelectField>
+          <FormTextAreaField
+            controlId="taskDescription"
+            label="Description"
+            placeholder="Enter task description"
+            name={'description'}
+          />
+          <FormSelectField
+            controlId="taskPriority"
+            label="Select task priority"
+            name={'priority'}
+            placeholder="Select task priority">
+            <option value={TaskPriority.Medium}>Medium</option>
+            <option value={TaskPriority.High}>High</option>
+            <option value={TaskPriority.Low}>Low</option>
+          </FormSelectField>
+          <FormTextField
+            controlId="teamMember"
+            label="Assigned team member"
+            placeholder="Enter assigned team member name"
+            name={'assignedTeamMember'}
+          />
+          <FormTextField
+            controlId="dueDate"
+            label="Due date"
+            placeholder="Enter due date"
+            type={'date'}
+            name={'dueByTimestamp'}
+            transform={convertTimestampToDate}
+          />
+        </Form>
+      )}
+    </Formik>
   );
 };
 
-function generateTask(form: HTMLFormElement, id: TaskModel['id']): TaskModel {
-  const name = (form.elements[0] as HTMLInputElement).value;
-  const statusString = (form.elements[1] as HTMLSelectElement).value;
-  const description = (form.elements[2] as HTMLTextAreaElement).value;
-  const priorityString = (form.elements[3] as HTMLSelectElement).value;
-  const assignedTeamMember = (form.elements[4] as HTMLInputElement).value;
-  const dueDateString = (form.elements[5] as HTMLInputElement).value;
+const validateForm = (values: TaskModel) => {
+  const errors: Record<string, string> = {};
+  if (!values.name.trim()) {
+    errors.name = 'Name is required';
+  }
+  if (!values.description.trim()) {
+    errors.description = 'Description is required';
+  }
+  if (!values.assignedTeamMember.trim()) {
+    errors.assignedTeamMember = 'Assigned team member is required';
+  }
+  if (!values.dueByTimestamp) {
+    errors.dueByTimestamp = 'Due date is required';
+  }
+  return errors;
+};
 
-  const status: TaskStatus = parseInt(statusString, 10) as TaskStatus;
-  const priority: TaskPriority = parseInt(priorityString, 10) as TaskPriority;
-  const dueByTimestamp = new Date(dueDateString).getTime();
-
-  return {
-    name,
-    status,
-    description,
-    priority,
-    assignedTeamMember,
-    dueByTimestamp,
-    id,
-  };
-}
+type TaskFormProps = {
+  task: TaskModel;
+  action: ActionCreatorWithPayload<TaskModel>;
+  id: string;
+  handleClose: () => void;
+};

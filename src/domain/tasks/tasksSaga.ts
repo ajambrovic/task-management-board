@@ -59,10 +59,10 @@ function* doFetchTasksSaga({ payload }: { type: PayloadAction['type']; payload: 
         tasksActions.tasksLoadSuccess({ data: convertTasksServerDataToLocalData(tasksData), searchQuery: payload }),
       );
     } else {
-      yield* put(tasksActions.tasksActionFailed('Loading from server failed'));
+      yield* handleError('Loading from server failed');
     }
   } catch (error) {
-    yield* put(tasksActions.tasksActionFailed('Loading from server failed'));
+    yield* handleError('Loading from server failed');
   }
 }
 
@@ -83,11 +83,11 @@ function* doEditTaskSaga({ payload }: { type: PayloadAction['type']; payload: Ta
     });
     if (response.status !== 200) {
       yield* put(tasksActions.editTaskLocally(currentTaskData));
-      yield* put(tasksActions.tasksActionFailed('Task update failed'));
+      yield* handleError('Task update failed');
     }
   } catch (error) {
     yield* put(tasksActions.editTaskLocally(currentTaskData));
-    yield* put(tasksActions.tasksActionFailed('Task update failed'));
+    yield* handleError('Task update failed');
   }
 }
 
@@ -109,7 +109,7 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
           taskIndex,
         }),
       );
-      yield* put(tasksActions.tasksActionFailed('Task deletion failed'));
+      yield* handleError('Task deletion failed');
     }
   } catch (error) {
     yield* put(
@@ -118,7 +118,7 @@ function* doDeleteTaskSaga({ payload: id }: { type: PayloadAction['type']; paylo
         taskIndex,
       }),
     );
-    yield* put(tasksActions.tasksActionFailed('Task deletion failed'));
+    yield* handleError('Task deletion failed');
   }
 }
 
@@ -133,10 +133,10 @@ function* doCreateTaskSaga({ payload }: { type: PayloadAction['type']; payload: 
       const newTask: TaskModel = yield response.json();
       yield* put(tasksActions.createTaskLocallyAction(newTask));
     } else {
-      yield* put(tasksActions.tasksActionFailed('Task creation failed'));
+      yield* handleError('Task creation failed');
     }
   } catch (error) {
-    yield* put(tasksActions.tasksActionFailed('Task creation failed'));
+    yield* handleError('Task creation failed');
   }
 }
 
@@ -157,7 +157,7 @@ const DEFAULT_HEADERS = {
   },
 };
 
-function convertTasksServerDataToLocalData(tasks: TasksServerModel) {
+export function convertTasksServerDataToLocalData(tasks: TasksServerModel) {
   const convertedTasks: TasksConvertedServerModel = {
     ids: [],
     byId: {},
@@ -169,4 +169,8 @@ function convertTasksServerDataToLocalData(tasks: TasksServerModel) {
   });
 
   return convertedTasks;
+}
+
+function* handleError(error: string) {
+  yield* put(tasksActions.tasksActionFailed(error));
 }

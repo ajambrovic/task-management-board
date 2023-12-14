@@ -15,26 +15,21 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     tasksLoadSuccess: (state, action: PayloadAction<{ data: TasksConvertedServerModel; searchQuery: string }>) => {
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          ...action.payload.data.byId,
-        },
-        ids: [...state.ids, ...action.payload.data.ids],
-        networkRequestStatus: NetworkRequestStatus.Success,
-        searchQuery: action.payload.searchQuery,
-        error: '',
-      };
+      state.byId = action.payload.data.byId;
+      state.ids = action.payload.data.ids;
+      state.networkRequestStatus = NetworkRequestStatus.Success;
+      state.searchQuery = action.payload.searchQuery;
+      state.error = '';
     },
     rehydrationFinished: (state) => {
-      return { ...state, networkRequestStatus: NetworkRequestStatus.Success };
+      state.networkRequestStatus = NetworkRequestStatus.Success;
     },
     tasksActionFailed: (state, action: PayloadAction<string>) => {
-      return { ...state, networkRequestStatus: NetworkRequestStatus.Fail, error: action.payload };
+      state.networkRequestStatus = NetworkRequestStatus.Fail;
+      state.error = action.payload;
     },
     loadTasks: (state, action: PayloadAction<string>) => {
-      return { ...state, ids: [], byId: {}, networkRequestStatus: NetworkRequestStatus.InProgress };
+      state.networkRequestStatus = NetworkRequestStatus.InProgress;
     },
     createTaskLocallyAction: (state, action: PayloadAction<TaskModel>) => {
       state.byId[action.payload.id] = action.payload;

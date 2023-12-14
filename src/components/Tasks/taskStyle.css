@@ -1,0 +1,11 @@
+.card-body {
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.25rem !important;
+  cursor: grab;
+  transition: background-color 0.2s ease-in !important;
+}
+
+.card-body:hover {
+  background-color: rgba(0, 0, 0, 0.01) !important;
+}

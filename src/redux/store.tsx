@@ -13,7 +13,7 @@ export const rehydrationFinishedAction = createAction('store/rehydrationFinished
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const configureAppStore = (initialState = {}) => {
+export const configureAppStore = (initialState = {}) => {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
 
@@ -31,7 +31,10 @@ const configureAppStore = (initialState = {}) => {
     devTools: process.env.NODE_ENV !== 'production',
   });
 
-  sagaMiddleware.run(rootSaga);
+  // @ts-expect-error: Incorrectly complains __TEST__ does not exists
+  if (!global.__TEST__) {
+    sagaMiddleware.run(rootSaga);
+  }
   return store;
 };
 
@@ -43,3 +46,4 @@ export const persistor = persistStore(store, undefined, () => {
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = ReturnType<typeof configureAppStore>;

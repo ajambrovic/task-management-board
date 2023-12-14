@@ -6,19 +6,20 @@ export const selectTaskIndex = (state: RootState, taskId: TaskModel['id']) => {
   return selectTasksIds(state).findIndex((id) => id === taskId);
 };
 
-// TODO: https://redux.js.org/usage/deriving-data-selectors#reselect-usage-patterns-and-limitations
-export const selectTasksByTaskStatus = createSelector(
+export const selectTaskIdsByTaskStatus = createSelector(
   [selectTasksData, (_, taskStatus) => taskStatus, selectTasksIds, (_, taskIds) => taskIds],
   (tasks, taskStatus, taskIds) => {
     // Filter tasks based on taskStatus
     const filteredTasks = Object.values(tasks).filter((task) => task.status === taskStatus);
 
-    // Sort tasks based on the order of taskIds
-    const sortedTasks: TaskModel[] = taskIds
-      .map((taskId) => filteredTasks.find((task) => task.id === taskId))
-      .filter((task): task is TaskModel => task !== undefined);
+    const sortedTaskIds: TaskModel['id'][] = taskIds
+      .map((taskId) => {
+        const task = filteredTasks.find((t) => t.id === taskId);
+        return task != null ? task.id : undefined;
+      })
+      .filter((taskId): taskId is TaskModel['id'] => taskId !== undefined);
 
-    return sortedTasks;
+    return sortedTaskIds;
   },
 );
 
