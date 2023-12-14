@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useAppSelector } from 'redux/hooks';
 import { convertTimestampToDate } from 'util/timeFormat';
-import { TaskForm } from './TaskForm';
+import { TaskModal } from './TaskModal';
 import './taskStyle.css';
 
 export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
@@ -20,7 +20,7 @@ export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
           <br />
           Task Priority: {TaskPriority[task.priority]}
         </Card.Text>
-        <TaskForm
+        <TaskModal
           task={task}
           action={tasksActions.editTask}
           shouldShowDelete

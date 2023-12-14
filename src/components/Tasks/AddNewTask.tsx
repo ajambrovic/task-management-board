@@ -2,7 +2,7 @@ import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksMode
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { TaskForm } from './TaskForm';
+import { TaskModal } from './TaskModal';
 
 export const AddNewTask = () => {
   const task: TaskModel = {
@@ -18,7 +18,7 @@ export const AddNewTask = () => {
   return (
     <Row className="p-3 text-center">
       <Col>
-        <TaskForm task={task} action={tasksActions.createTask} buttonTitle="Add task" id="addTask" />
+        <TaskModal task={task} action={tasksActions.createTask} buttonTitle="Add task" id="addTask" />
       </Col>
     </Row>
   );
