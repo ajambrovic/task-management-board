@@ -11,7 +11,7 @@ import './taskStyle.css';
 export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
   const task = useAppSelector((state) => selectTaskById(state, taskId));
   return (
-    <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId}>
+    <ListGroup.Item draggable="true" onDragStart={handleDragStart} id={taskId} data-testid={`task-${taskId}`}>
       <Card.Body className="bg-white mb-2">
         <Card.Title>{task.name}</Card.Title>
         <Card.Subtitle>Assigned to: {task.assignedTeamMember}</Card.Subtitle>
