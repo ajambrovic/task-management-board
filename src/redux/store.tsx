@@ -13,7 +13,7 @@ export const rehydrationFinishedAction = createAction('store/rehydrationFinished
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const configureAppStore = (initialState = {}) => {
+export const configureAppStore = (initialState = {}) => {
   const reduxSagaMonitorOptions = {};
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
 
@@ -43,3 +43,4 @@ export const persistor = persistStore(store, undefined, () => {
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = ReturnType<typeof configureAppStore>;

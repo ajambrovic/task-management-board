@@ -157,7 +157,7 @@ const DEFAULT_HEADERS = {
   },
 };
 
-function convertTasksServerDataToLocalData(tasks: TasksServerModel) {
+export function convertTasksServerDataToLocalData(tasks: TasksServerModel) {
   const convertedTasks: TasksConvertedServerModel = {
     ids: [],
     byId: {},
