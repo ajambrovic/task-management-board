@@ -1,4 +1,4 @@
-import { type FormTextFieldInputProps } from 'components/Tasks/components/FormTextField';
+import { type FormInputSharedProps } from 'components/Tasks/components/FormFieldModel';
 import { Field, type FieldProps } from 'formik';
 import { type ReactNode } from 'react';
 import Col from 'react-bootstrap/Col';
@@ -38,4 +38,4 @@ export const FormSelectField = ({ controlId, label, placeholder, name, children 
   );
 };
 
-type FormSelectFieldInputProps = FormTextFieldInputProps & { children: ReactNode };
+type FormSelectFieldInputProps = FormInputSharedProps & { children: ReactNode };

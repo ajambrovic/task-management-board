@@ -1,15 +1,14 @@
 import { type ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { FormSelectField } from 'components/Tasks/components/FormSelectField';
+import { FormTextAreaField } from 'components/Tasks/components/FormTextAreaField';
 import { FormTextField } from 'components/Tasks/components/FormTextField';
 import { TaskPriority, TaskStatus, type TaskModel } from 'domain/tasks/tasksModel';
 import { tasksActions } from 'domain/tasks/tasksSlice';
 import { Formik } from 'formik';
 import { useCallback, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
 import { useAppDispatch } from 'redux/hooks';
 import { convertTimestampToDate } from 'util/timeFormat';
 
@@ -40,6 +39,7 @@ export const TaskForm = ({
   }, []);
 
   const defaultDate = task.dueByTimestamp !== 0 ? convertTimestampToDate(task.dueByTimestamp) : undefined;
+  console.log(defaultDate);
 
   return (
     <>
@@ -53,11 +53,7 @@ export const TaskForm = ({
         <Modal.Body>
           <Formik
             initialValues={task}
-            validate={(values) => {
-              const errors = {};
-
-              return errors;
-            }}
+            validate={validateForm}
             onSubmit={(values, { setSubmitting }) => {
               dispatch(action(values));
               handleClose();
@@ -74,15 +70,12 @@ export const TaskForm = ({
                   <option value={TaskStatus.InProgress}>In progress</option>
                   <option value={TaskStatus.Completed}>Completed</option>
                 </FormSelectField>
-                <Form.Group className="mb-3" controlId="taskDescription" as={Row}>
-                  <Form.Label column sm={4}>
-                    Description
-                  </Form.Label>
-                  <Col sm={8}>
-                    <Form.Control as="textarea" rows={3} required defaultValue={task.description} />
-                    <Form.Control.Feedback type="invalid">Please enter a task description</Form.Control.Feedback>
-                  </Col>
-                </Form.Group>
+                <FormTextAreaField
+                  controlId="taskDescription"
+                  label="Description"
+                  placeholder="Enter task description"
+                  name={'description'}
+                />
                 <FormSelectField
                   controlId="taskPriority"
                   label="Select task priority"
@@ -98,15 +91,14 @@ export const TaskForm = ({
                   placeholder="Enter assigned team member name"
                   name={'assignedTeamMember'}
                 />
-                <Form.Group className="mb-3" controlId="dueDate" as={Row}>
-                  <Form.Label column sm={4}>
-                    Due date
-                  </Form.Label>
-                  <Col sm={8}>
-                    <Form.Control type="date" required defaultValue={defaultDate} />
-                    <Form.Control.Feedback type="invalid">Please select a valid due date</Form.Control.Feedback>
-                  </Col>
-                </Form.Group>
+                <FormTextField
+                  controlId="dueDate"
+                  label="Due date"
+                  placeholder="Enter due date"
+                  type={'date'}
+                  name={'dueByTimestamp'}
+                  transform={convertTimestampToDate}
+                />
               </Form>
             )}
           </Formik>
@@ -127,4 +119,21 @@ export const TaskForm = ({
       </Modal>
     </>
   );
+};
+
+const validateForm = (values: TaskModel) => {
+  const errors: Record<string, string> = {};
+  if (!values.name.trim()) {
+    errors.name = 'Name is required';
+  }
+  if (!values.description.trim()) {
+    errors.description = 'Description is required';
+  }
+  if (!values.assignedTeamMember.trim()) {
+    errors.assignedTeamMember = 'Assigned team member is required';
+  }
+  if (!values.dueByTimestamp) {
+    errors.dueByTimestamp = 'Due date is required';
+  }
+  return errors;
 };

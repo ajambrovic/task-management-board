@@ -4,24 +4,12 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-export const FormTextField = ({
-  controlId,
-  label,
-  placeholder,
-  name,
-  type = 'text',
-  transform,
-}: FormTextFieldProps) => {
+export const FormTextAreaField = ({ controlId, label, placeholder, name }: FormInputSharedProps) => {
   return (
     <Field name={name}>
-      {({ field, form }: FieldProps<string | number>) => {
+      {({ field, form }: FieldProps<string>) => {
         const isValid = !form.errors[field.name];
         const isInvalid = form.touched[field.name] && !isValid;
-        let value = field.value;
-
-        if (transform && field.value !== 0) {
-          value = transform(field.value);
-        }
 
         return (
           <Form.Group className="mb-3" controlId={controlId} as={Row}>
@@ -31,11 +19,11 @@ export const FormTextField = ({
             <Col sm={8}>
               <Form.Control
                 {...field}
-                type={type}
+                as="textarea"
+                rows={3}
                 placeholder={placeholder}
                 isValid={form.touched[field.name] && isValid}
                 isInvalid={isInvalid}
-                value={value}
               />
               <Form.Control.Feedback type="invalid">{form.errors[field.name] as string}</Form.Control.Feedback>
             </Col>
@@ -45,5 +33,3 @@ export const FormTextField = ({
     </Field>
   );
 };
-
-type FormTextFieldProps = FormInputSharedProps & { type?: string; transform?: (value: any) => any };
