@@ -18,7 +18,7 @@ export const AddNewTask = () => {
   return (
     <Row className="p-3 text-center">
       <Col>
-        <TaskForm task={task} action={tasksActions.createTask} buttonTitle="Add task" />
+        <TaskForm task={task} action={tasksActions.createTask} buttonTitle="Add task" id="addTask" />
       </Col>
     </Row>
   );

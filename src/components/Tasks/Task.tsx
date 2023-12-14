@@ -20,7 +20,13 @@ export const Task = ({ taskId }: { taskId: TaskModel['id'] }) => {
           <br />
           Task Priority: {TaskPriority[task.priority]}
         </Card.Text>
-        <TaskForm task={task} action={tasksActions.editTask} shouldShowDelete buttonTitle="Edit task" />
+        <TaskForm
+          task={task}
+          action={tasksActions.editTask}
+          shouldShowDelete
+          buttonTitle="Edit task"
+          id={`editTask${taskId}`}
+        />
       </Card.Body>
     </ListGroup.Item>
   );

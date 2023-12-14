@@ -12,17 +12,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useAppDispatch } from 'redux/hooks';
 import { convertTimestampToDate } from 'util/timeFormat';
 
-export const TaskForm = ({
-  task,
-  action,
-  shouldShowDelete = false,
-  buttonTitle,
-}: {
-  task: TaskModel;
-  action: ActionCreatorWithPayload<TaskModel>;
-  buttonTitle: string;
-  shouldShowDelete?: boolean;
-}) => {
+export const TaskForm = ({ task, action, shouldShowDelete = false, buttonTitle, id }: TaskFormProps) => {
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);
 
@@ -37,9 +27,6 @@ export const TaskForm = ({
   const handleDelete = useCallback(() => {
     dispatch(tasksActions.deleteTask(task.id));
   }, []);
-
-  const defaultDate = task.dueByTimestamp !== 0 ? convertTimestampToDate(task.dueByTimestamp) : undefined;
-  console.log(defaultDate);
 
   return (
     <>
@@ -56,10 +43,11 @@ export const TaskForm = ({
             validate={validateForm}
             onSubmit={(values, { setSubmitting }) => {
               dispatch(action(values));
+              setSubmitting(false);
               handleClose();
             }}>
             {({ handleSubmit, handleChange, values, errors, isValid, isSubmitting }) => (
-              <Form noValidate id="my-form" onSubmit={handleSubmit}>
+              <Form noValidate id={id} onSubmit={handleSubmit}>
                 <FormTextField controlId="taskName" label="Task name" placeholder="Enter task name" name={'name'} />
                 <FormSelectField
                   controlId="taskStatus"
@@ -112,7 +100,7 @@ export const TaskForm = ({
           <Button variant="secondary" onClick={handleClose} className="ms-auto">
             Close
           </Button>
-          <Button variant="primary" type="submit" form="my-form">
+          <Button variant="primary" type="submit" form={id}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -136,4 +124,12 @@ const validateForm = (values: TaskModel) => {
     errors.dueByTimestamp = 'Due date is required';
   }
   return errors;
+};
+
+type TaskFormProps = {
+  task: TaskModel;
+  action: ActionCreatorWithPayload<TaskModel>;
+  buttonTitle: string;
+  shouldShowDelete?: boolean;
+  id: string;
 };
