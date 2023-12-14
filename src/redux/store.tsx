@@ -31,7 +31,10 @@ export const configureAppStore = (initialState = {}) => {
     devTools: process.env.NODE_ENV !== 'production',
   });
 
-  sagaMiddleware.run(rootSaga);
+  // @ts-expect-error: Incorrectly complains __TEST__ does not exists
+  if (!global.__TEST__) {
+    sagaMiddleware.run(rootSaga);
+  }
   return store;
 };
 

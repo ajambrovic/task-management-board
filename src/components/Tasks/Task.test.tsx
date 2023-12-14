@@ -1,40 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { convertTasksServerDataToLocalData } from 'domain/tasks/tasksSaga';
 import { tasksActions } from 'domain/tasks/tasksSlice';
-import { HttpResponse, http } from 'msw';
-import { setupServer } from 'msw/node';
-import { store } from 'redux/store';
+import { configureAppStore } from 'redux/store';
 import { renderWithProviders } from 'util/test-util';
 import { Task } from './Task';
 
-export const handlers = [
-  http.get('/tasks', async () => {
-    return HttpResponse.json(httpResponse);
-  }),
-];
-
-const server = setupServer(...handlers);
-
-// Enable API mocking before tests.
-beforeAll(() => {
-  server.listen();
-});
-
-// Reset any runtime request handlers we may add during the tests.
-afterEach(() => {
-  server.resetHandlers();
-});
-
-// Disable API mocking after the tests are done.
-afterAll(() => {
-  server.close();
-});
-
-jest.mock('redux-saga', () => () => ({ run: jest.fn() }));
-
 describe('Task', () => {
   it('renders task data', () => {
-    renderWithProviders(<Task taskId={httpResponse[0].id} />);
+    const store = configureAppStore();
+    store.dispatch(
+      tasksActions.tasksLoadSuccess({ data: convertTasksServerDataToLocalData(httpResponse), searchQuery: '' }),
+    );
+    renderWithProviders(<Task taskId={httpResponse[0].id} />, { store });
 
     expect(screen.getByText(httpResponse[0].name)).toBeInTheDocument();
     expect(screen.getByText(`Assigned to: ${httpResponse[0].assignedTeamMember}`)).toBeInTheDocument();
